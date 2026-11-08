@@ -1,0 +1,11 @@
+{
+  "name": "tripwire",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tripwire: a circuit breaker at PayPal checkout that stops a store selling at a price nobody meant.",
+  "type": "module",
+  "scripts": {
+    "test": "node --no-warnings --test test/*.test.mjs"
+  },
+  "engines": { "node": ">=22.13" }
+}

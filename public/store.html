@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fernbrook Supply: demo store</title>
+  <meta name="description" content="A demo store protected by Tripwire. Checkout runs on the PayPal sandbox.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&display=swap">
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body class="shop">
+  <header class="topbar">
+    <span class="brand"><span class="mark" id="brandMark"></span>Fernbrook Supply</span>
+    <span class="tag">Demo store</span>
+    <nav>
+      <a class="btn btn-ghost" id="consoleLink" href="/"><span class="label-text">Merchant console</span></a>
+      <button class="btn btn-ghost" id="themeBtn" type="button">Dark</button>
+    </nav>
+  </header>
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="kicker">Catalog No. 11 · Autumn</p>
+        <h1>Good gear, fair prices.</h1>
+      </div>
+      <p class="promise"><span class="mini" aria-hidden="true"></span>Every checkout passes Tripwire first. If a price looks wrong, checkout pauses and you are never charged.</p>
+    </section>
+    <div class="notice" id="notice">PayPal sandbox: pay with a PayPal sandbox buyer account. No real money moves.</div>
+    <section class="products" id="products" aria-live="polite"><div class="empty">Loading products…</div></section>
+  </main>
+  <script type="module" src="/store.js"></script>
+</body>
+</html>

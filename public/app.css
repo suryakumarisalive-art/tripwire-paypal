@@ -1,0 +1,503 @@
+/* Tripwire: the Breaker Box (see docs/DESIGN.md). The console is one object: a dark enclosure with a breaker per product.
+   Checkouts run in on the top bus from the shop, through each product's breaker, and out on the bottom bus to PayPal.
+   A wrong price trips that breaker; the checkouts that hit it stop at the gap. One signal colour (orange) = tripped.
+   The rules are objects: only the merchant's lever resets a breaker, the AI can only light its lamp, and more than five
+   checkouts in a minute heat a fuse that trips it. One family, Archivo. Every hue, size and corner below is a token. */
+:root {
+  --ground: #e6e4df; --sheet: #f6f5f1; --sheet-2: #dcdad4;
+  --ink: #1b1b1b; --ink-2: #4b4943; --faint: #625f58; --rule: #cfccc4; --rule-2: #b9b6ad; --input: #84817a;
+  --signal: #ff4f1a; --signal-ink: #b8360a; --signal-wash: #f8ddd2;
+  --amber: #ffb020;
+  --ok: #1e7a4d; --ok-wash: #dcebe1; --error: #b42318; --error-wash: #f6dcd8;
+  /* the enclosure stays dark in both themes: it is a physical object, not a page surface */
+  --box: #1d1d1c; --box-rule: #33322f; --module: #292826; --module-rule: #3b3a37; --slot: #0d0d0c;
+  --handle: #e9e7e1; --wire: #8d8a83; --bus: #c9c4b8; --bus-hi: #efebe2; --bus-lo: #95908a; --label: #f4f2ec; --label-ink: #1b1b1b; --box-text: #c9c6be; --box-faint: #a19e96;
+  --box-lift: 0 0 0 1px #0b0b0a, inset 0 1px 0 rgba(255, 255, 255, .06);
+  --live: #f1e6c8; --live-glow: rgba(255, 228, 170, .55); /* current flowing: a warm filament white, not a second accent */
+  /* the receipt is paper in both themes */
+  --paper: #f6f5f1; --paper-ink: #1b1b1b; --paper-faint: #625f58; --paper-rule: #b9b6ad; --paper-signal: #b8360a;
+  --paypal: #003087;
+  /* every remaining hue of the hardware and the PayPal terminal, named */
+  --edge-btn: #55534d; --edge-off: #3d3c38; --edge-hover: #6d6b64; --stamp: #969288; --stamp-hi: #aaa69c; --well: #1b1a18; --ember: #ffb38f; --lamp-off-hi: #5d5b55; --lamp-off: #2f2e2b; --amber-hi: #fff4cc; --amber-lo: #c27600; --tag: #fffaf2; --live-hi: #fffdf6; --hold-sub: #b9b6ad; --pp-body-hi: #2a2c33; --pp-body-lo: #1a1b20; --pp-edge: #3b3e47; --pp-led: #5c79c4; --pp-text: #c7d3f2; --pp-text-dim: #9cb1e4; --pp-digit: #eef3ff; --pp-screen: #0a1430; --pp-lit-1: #0d3a8c; --pp-lit-2: #00256b; --pp-lit-3: #001540; --shop-mark: #0f766e;
+  --metal-hi: #d9d5cb; --rail-hi: #4a4944; --rail: #3a3935; --rail-lo: #2c2b28; --module-hi: #34332f; --module-lo: #242321;
+  --glass: #1f1e1c; --handle-hi: #fbfaf6; --handle-lo: #b9b5aa; --slot-deep: #050505;
+  /* one type scale (px), and three corner radii */
+  --fs-12: 12px; --fs-13: 13px; --fs-14: 14px; --fs-15: 15px; --fs-16: 16px; --fs-17: 17px; --fs-18: 18px; --fs-20: 20px; --fs-22: 22px; --fs-28: 28px; --fs-34: 34px; --fs-40: 40px; --fs-44: 44px; --fs-56: 56px; --fs-72: 72px;
+  --r-1: 2px; --r-2: 4px; --r-3: 6px;
+  /* the box's own colours, one name each */
+  --box-hi: #f4f2ec; --metal: #8f8b80; --go: #9fe6c2; --dead: #5a5852; --screw-ring: #2b2a27; --frame: #0b0b0a; --engrave: #77746d;
+  --sans: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --ground: #121211; --sheet: #1b1b1a; --sheet-2: #242422;
+  --ink: #edebe6; --ink-2: #b4b1a9; --faint: #98958d; --rule: #2c2b29; --rule-2: #3d3c39; --input: #77746d;
+  --signal: #ff5a26; --signal-ink: #ff8a5c; --signal-wash: #2d1a12;
+  --ok: #4cc38a; --ok-wash: #11261a; --error: #f2685c; --error-wash: #2c1414;
+  /* the box sits a step above the dark page, with a visible edge, so it still reads as an object */
+  --box: #2c2b28; --box-rule: #5a5852; --module: #363531; --module-rule: #4f4e49; --slot: #0a0a09;
+  --box-lift: 0 0 0 3px #1a1918, 0 0 0 4px #4a4944;
+  --paper: #e9e6de; --paper-faint: #5a574f; --paper-rule: #aaa69c;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--ground); color: var(--ink); font: 400 var(--fs-15)/1.5 var(--sans); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--signal); color: #fff; }
+a { color: inherit; text-underline-offset: 3px; }
+button, select, textarea, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; border-radius: var(--r-2); }
+* { scrollbar-color: var(--rule-2) transparent; }
+h1, h2, h3 { text-wrap: balance; }
+.num, .price { font-variant-numeric: tabular-nums lining-nums; }
+.ico { width: 18px; height: 18px; flex: none; }
+.mono { font-family: var(--mono); }
+.faint { color: var(--faint); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* top bar */
+.topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 16px; padding: 6px 32px; min-height: 58px; background: var(--ground); border-bottom: 1px solid var(--rule); }
+.brand { display: flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; font: 800 var(--fs-18)/1 var(--sans); font-stretch: 118%; letter-spacing: -0.01em; }
+.mark svg { display: block; }
+.ctx { display: flex; align-items: center; gap: 10px; padding-left: 16px; border-left: 1px solid var(--rule-2); color: var(--ink-2); font-size: var(--fs-14); }
+.tag { font: 600 var(--fs-12)/1 var(--sans); font-stretch: 87%; padding: 5px 7px; border: 1px solid var(--rule-2); border-radius: var(--r-2); color: var(--ink-2); }
+.topbar nav { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+.sync { margin-right: 6px; font: 600 var(--fs-13)/1 var(--sans); font-stretch: 92%; color: var(--faint); }
+.sync.off { color: var(--signal-ink); }
+
+/* buttons: actions are ink; nothing that sells money wears the signal color */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: var(--r-3); border: 1px solid var(--rule-2); background: var(--sheet); color: var(--ink); cursor: pointer; font: 600 var(--fs-14)/1.2 var(--sans); text-decoration: none; white-space: nowrap; transition: background-color .15s, border-color .15s, color .15s; }
+.btn:hover { border-color: var(--ink-2); }
+.btn:disabled { cursor: not-allowed; }
+.btn:disabled:not(.busy), .btn:disabled:not(.busy):hover { background: var(--sheet-2); border-color: var(--rule); color: var(--faint); }
+.btn-primary { background: var(--ink); border-color: var(--ink); color: var(--ground); }
+.btn-primary:hover { background: color-mix(in srgb, var(--ink) 84%, var(--ground)); }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--ink-2); }
+.btn-ghost:hover { color: var(--ink); background: var(--sheet-2); border-color: var(--rule); }
+.btn-link { min-height: 44px; padding: 0 2px; border: 0; background: none; color: var(--ink-2); font: 600 var(--fs-14)/1 var(--sans); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.btn.armed { background: var(--error); border-color: var(--error); color: #fff; }
+.btn.busy { position: relative; color: transparent !important; }
+.btn.busy::after { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--ink-2); border-top-color: transparent; animation: spin .7s linear infinite; }
+.btn-primary.busy::after { border-color: var(--ground); border-top-color: transparent; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.wrap { max-width: 1440px; margin: 0 auto; padding: 0 32px 48px; }
+
+/* the line above the box: what this is, and the three demo moves (a real sequence) */
+.story { display: grid; gap: 8px; padding: 12px 0 14px; }
+/* the subheader: what Tripwire is, in one breath, under the headline */
+.story .dek { margin: 0; max-width: 88ch; font-size: var(--fs-17); line-height: 1.45; color: var(--ink-2); text-wrap: pretty; }
+.story .dek strong { color: var(--ink); font-weight: 700; }
+.story h1 { margin: 0; font: 800 var(--fs-40)/1.05 var(--sans); font-stretch: 116%; letter-spacing: -0.025em; white-space: nowrap; }
+.story h1 span { color: var(--faint); font-weight: 600; }
+.tour { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.tour-label { font: 700 var(--fs-13)/1.2 var(--sans); font-stretch: 87%; color: var(--faint); max-width: 9ch; }
+.tour ol { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 8px; }
+.tstep { display: flex; align-items: center; gap: 8px; }
+.tstep + .tstep::before { content: ''; width: 18px; height: 2px; background: var(--rule-2); }
+.tstep .btn { padding: 0 14px; }
+.tstep .tn { font: 800 var(--fs-13)/1 var(--sans); font-stretch: 87%; color: var(--faint); }
+.tstep.done .btn { color: var(--ink-2); }
+.tstep.hint { font: 650 var(--fs-14)/1.2 var(--sans); color: var(--ink); }
+.tstep.hint.current { color: var(--signal-ink); }
+
+/* ===== THE BOX ===== */
+.box { position: relative; background: var(--box); border: 2px solid var(--box-rule); border-radius: var(--r-2); color: var(--box-text); padding: 14px 22px 22px; box-shadow: var(--box-lift); }
+/* the enclosure's four corner screws */
+.box::before { content: ''; position: absolute; inset: 8px; pointer-events: none; background: radial-gradient(circle, var(--metal) 0 2px, var(--screw-ring) 2.5px 4px, transparent 4.5px) 0 0 / 9px 9px no-repeat, radial-gradient(circle, var(--metal) 0 2px, var(--screw-ring) 2.5px 4px, transparent 4.5px) 100% 0 / 9px 9px no-repeat, radial-gradient(circle, var(--metal) 0 2px, var(--screw-ring) 2.5px 4px, transparent 4.5px) 0 100% / 9px 9px no-repeat, radial-gradient(circle, var(--metal) 0 2px, var(--screw-ring) 2.5px 4px, transparent 4.5px) 100% 100% / 9px 9px no-repeat; }
+.box.jolt { animation: jolt .32s ease-out; }
+.brk.hit { animation: hit .22s ease-out; }
+@keyframes hit { from { box-shadow: 0 0 0 2px var(--signal), 0 0 26px 4px color-mix(in srgb, var(--signal) 55%, transparent); } }
+.terminal.ready .t-led { background: var(--go); box-shadow: 0 0 10px 2px var(--go); }
+@keyframes jolt { 20% { transform: translate(0, 2px); } 45% { transform: translate(0, -1px); } 70% { transform: translate(0, 1px); } }
+.plate { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 18px; padding: 0 0 8px; }
+.plate-name { margin: 0; font: 800 var(--fs-17)/1 var(--sans); font-stretch: 118%; letter-spacing: -0.01em; color: var(--box-hi); }
+.plate-sub { font-size: var(--fs-13); color: var(--box-faint); }
+/* the rules, printed along the bottom edge of the enclosure */
+.box > .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 26px; margin: 16px 0 0; padding-top: 12px; border-top: 1px solid var(--box-rule); font-size: var(--fs-13); color: var(--box-text); }
+/* the demo's three moves are the panel's own test buttons */
+.plate .tour { margin-left: auto; }
+.box .tour-label { color: var(--box-faint); max-width: none; }
+.box .tstep .tn { color: var(--box-faint); }
+.box .tstep + .tstep::before { background: var(--box-rule); }
+.box .tstep .btn { border-radius: var(--r-1); background: var(--module-hi); border-color: var(--edge-btn); color: var(--box-hi); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .06); }
+.lbl-short { display: none; }
+.box .tstep .btn:hover { border-color: var(--metal); }
+.box .tstep .btn-primary { background: var(--box-hi); border-color: var(--box-hi); color: var(--label-ink); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .18), 0 0 14px color-mix(in srgb, var(--live) 25%, transparent); }
+.box .tstep .btn:disabled:not(.busy) { background: transparent; border-color: var(--edge-off); color: var(--engrave); }
+.box .tstep.done .btn { color: var(--box-faint); }
+.box .tstep.done .tn { position: relative; width: 12px; font-size: 0; }
+.box .tstep.done .tn::after { content: ''; position: absolute; left: 3px; top: -6px; width: 5px; height: 10px; border: solid var(--box-hi); border-width: 0 2px 2px 0; transform: rotate(45deg); } /* a done step shows a tick, not a disabled look */
+.box .tstep.hint { color: var(--box-hi); }
+.box .tstep.hint.current { color: var(--signal); }
+.legend > span { display: inline-flex; align-items: center; gap: 8px; }
+.lamp-key { width: 12px; height: 12px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 9px var(--amber); }
+.lever-key { width: 10px; height: 15px; border-radius: var(--r-1); background: var(--handle); }
+.fuse-key { width: 30px; height: 11px; border-radius: var(--r-3); background: linear-gradient(var(--signal), var(--signal)) 5px 50% / 12px 3px no-repeat, linear-gradient(90deg, var(--metal-hi) 0 4px, transparent 4px calc(100% - 4px), var(--metal-hi) 0), var(--glass); box-shadow: inset 0 0 0 1px var(--engrave); } /* a small glass fuse, like the ones on the breakers */
+/* the faceplate's two printed tabs */
+.filter { display: inline-flex; gap: 4px; }
+.filter button { min-height: 44px; padding: 0 8px; border: 0; background: none; color: var(--box-faint); font: 750 var(--fs-13)/1 var(--sans); font-stretch: 92%; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; box-shadow: inset 0 -2px 0 transparent; }
+.filter button:hover { color: var(--box-hi); }
+.filter button[aria-pressed="true"] { color: var(--box-hi); box-shadow: inset 0 -2px 0 var(--box-hi); }
+
+.panel { --src: 180px; --term: 200px; --gap: 22px; position: relative; display: grid; grid-template-columns: var(--src) minmax(0, 1fr) var(--term); column-gap: var(--gap); padding: 36px 0 36px; }
+/* bus bars, tinned copper: the top one runs from the shop across every breaker, the bottom one from every breaker to PayPal */
+.panel::before, .panel::after { content: ''; position: absolute; height: 8px; border-radius: var(--r-1); background: linear-gradient(180deg, var(--bus-hi) 0 2px, var(--bus) 2px 5px, var(--bus-lo) 5px); box-shadow: 0 1px 0 #000, 0 0 12px color-mix(in srgb, var(--live) 16%, transparent); }
+.panel::before { left: 70px; right: calc(var(--term) + var(--gap)); top: 12px; }
+.panel::after { left: calc(var(--src) + var(--gap)); right: var(--term); bottom: 9px; }
+
+.source { position: relative; align-self: start; display: grid; justify-items: start; gap: 2px; }
+.jack { position: absolute; left: 59px; top: -32px; width: 24px; height: 24px; border-radius: 50%; background: radial-gradient(circle, var(--slot-deep) 0 4px, var(--box) 4.5px); border: 4px solid var(--bus); }
+.source b { margin-top: 2px; font: 750 var(--fs-15)/1.15 var(--sans); color: var(--box-hi); }
+.source span { font-size: var(--fs-13); color: var(--box-faint); line-height: 1.35; }
+
+.rack { position: relative; display: grid; grid-template-columns: repeat(var(--cols, 8), minmax(0, 1fr)); gap: 30px 3px; }
+/* the DIN rail every breaker clips onto: it shows between them, so the row reads as one device, not a grid of cards */
+.rack::before { content: ''; position: absolute; left: -10px; right: -10px; top: 70px; height: 34px; border-radius: var(--r-1); background: linear-gradient(180deg, var(--rail-hi) 0 2px, var(--rail) 2px 6px, var(--rail-lo) 6px 28px, var(--rail) 28px 32px, var(--rail-hi) 32px); box-shadow: 0 2px 0 #000; }
+/* one breaker per product, always in the same slot */
+.brk { position: relative; display: flex; flex-direction: column; align-items: stretch; min-width: 0; padding: 8px 0 0; background: linear-gradient(180deg, var(--module-hi), var(--module) 18%, var(--module) 82%, var(--module-lo)); border: 1px solid var(--module-rule); border-radius: var(--r-1); color: var(--box-text); text-align: left; cursor: pointer; font: inherit; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 3px 0 var(--frame); transition: border-color .15s; }
+.brk:hover { border-color: var(--edge-hover); }
+.brk[aria-pressed="true"] { border-color: var(--box-hi); box-shadow: 0 0 0 1px var(--box-hi), 0 3px 0 var(--frame); }
+.brk::before, .brk::after { content: ''; position: absolute; left: 50%; width: 4px; margin-left: -2px; height: 17px; background: var(--wire); }
+.brk::before { top: -17px; } /* up to the top bus */
+.brk::after { bottom: -20px; height: 20px; background: var(--live); box-shadow: 0 0 6px var(--live-glow); } /* down to the bottom bus: lit while current flows */
+.brk.open::before { background: var(--bus); }
+.brk.open::after { background: repeating-linear-gradient(180deg, var(--dead) 0 4px, transparent 4px 7px); box-shadow: none; } /* dead: nothing flows on */
+.brk.checking::after { opacity: .45; }
+.brk.relit::after { animation: relit 1.4s ease-out; }
+@keyframes relit { 0% { background: #fff; box-shadow: 0 0 22px 6px var(--live-glow); } 100% { } }
+/* the rating stamped on the face: the last price you trusted */
+.rating { text-align: center; font: 650 var(--fs-12)/1 var(--sans); font-stretch: 75%; letter-spacing: .02em; color: var(--box-faint); white-space: nowrap; overflow: hidden; }
+.rating { color: var(--stamp); }
+.rating b { font-weight: 800; color: var(--stamp-hi); letter-spacing: .02em; }
+.brk.open .rating b { color: var(--box-hi); }
+.win { position: relative; align-self: center; width: 46px; height: 112px; margin-top: 8px; border-radius: var(--r-2); background: var(--slot); box-shadow: inset 0 0 0 1px #000, inset 0 6px 8px rgba(0, 0, 0, .55), 0 0 0 3px var(--well); overflow: hidden; }
+.win .flag { position: absolute; left: 5px; right: 5px; top: 5px; height: 50px; border-radius: var(--r-1); background: var(--signal); opacity: 0; transition: opacity .15s .2s; }
+/* the toggle pivots on the middle of the window: up is on, flipped down is open */
+.win .handle { position: absolute; left: 5px; right: 5px; top: 5px; height: 51px; border-radius: var(--r-1) var(--r-1) var(--r-1) var(--r-1); transform-origin: 50% 100%; background: linear-gradient(180deg, var(--handle-hi), var(--handle) 30%, var(--handle-lo)); box-shadow: inset 0 -6px 0 rgba(0, 0, 0, .12); transition: transform .38s cubic-bezier(.4, 1.6, .55, 1); }
+.win .handle::after { content: ''; position: absolute; left: 6px; right: 6px; top: 7px; height: 12px; background: repeating-linear-gradient(180deg, rgba(0, 0, 0, .2) 0 1px, transparent 1px 3px); }
+.brk.open .win .handle { transform: scaleY(-1); }
+.brk.open .win .flag { opacity: 1; }
+.brk.checking .win .handle { transform: scaleY(.25); }
+/* the pilot lamp and the state word */
+.state { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 10px; font: 800 var(--fs-13)/1 var(--sans); font-stretch: 92%; letter-spacing: .07em; text-transform: uppercase; color: var(--box-faint); }
+.state::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--live); box-shadow: 0 0 7px var(--live-glow); }
+.brk.open .state { color: var(--signal); }
+.brk.open .state::before { background: var(--rail); box-shadow: inset 0 0 0 1px #000; }
+.brk.checking .state { color: var(--amber); }
+/* review: still on and selling, but every order waits for the merchant */
+.brk.review .state { color: var(--amber); }
+.brk.review .state::before { background: var(--amber); box-shadow: 0 0 7px var(--amber); }
+.brk.checking .state::before { background: var(--amber); box-shadow: 0 0 7px var(--amber); animation: blink 1s steps(2, end) infinite; }
+/* the hit counter: checkouts this breaker stopped. It stays after the bots are gone */
+.tally { display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 7px; visibility: hidden; }
+.tally.on { visibility: visible; } /* only an open breaker (or one that stopped something) shows its count */
+.tally .digits { padding: 3px 4px 2px; border-radius: var(--r-1); background: var(--slot); box-shadow: inset 0 0 0 1px #000; font: 700 var(--fs-16)/1 var(--mono); letter-spacing: .06em; color: var(--signal); }
+.tally.zero .digits { color: var(--engrave); }
+.tally.closed .digits { color: var(--box-hi); }
+.tally .tl { font: 600 var(--fs-12)/1.1 var(--sans); color: var(--box-faint); }
+.tally.closed .tl { font-size: var(--fs-12); font-stretch: 80%; white-space: nowrap; color: var(--box-hi); } /* one line, so the reset never changes the panel's height */
+/* stopped checkouts pile up on top of the open breaker, filling the gap up to the bus */
+.embers { position: absolute; left: 50%; bottom: 100%; width: 60px; margin: 0 0 1px -30px; display: flex; flex-wrap: wrap-reverse; justify-content: center; gap: 1px; pointer-events: none; }
+.embers i { width: 5px; height: 5px; border-radius: 50%; background: var(--ember); box-shadow: 0 0 4px 1px var(--signal); }
+.meters { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 6px 10px; margin: 10px 4px; }
+/* the fuse: a glass cartridge whose filament heats with each rush checkout in the last minute; full trips the breaker */
+.fuse { position: relative; width: 46px; height: 13px; border-radius: var(--r-3); background: linear-gradient(180deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .02) 45%, rgba(0, 0, 0, .25)), var(--glass); box-shadow: inset 0 0 0 1px var(--edge-hover); overflow: hidden; }
+.brk[data-status="held"] .fuse { opacity: .3; }
+.fuse::before, .fuse::after { content: ''; position: absolute; top: 0; bottom: 0; width: 6px; background: linear-gradient(180deg, var(--metal-hi), var(--metal)); z-index: 1; }
+.fuse::before { left: 0; } .fuse::after { right: 0; }
+.fuse i { position: absolute; left: 6px; top: 5px; height: 3px; width: calc((100% - 12px) * var(--f, 0)); border-radius: var(--r-1); background: var(--signal); box-shadow: 0 0 6px 1px var(--signal); transition: width .3s ease-out; }
+/* the AI's lamp: it lights when the AI adds a hold. It has no lever */
+.lamp { display: inline-flex; align-items: center; gap: 5px; font: 800 var(--fs-12)/1 var(--sans); letter-spacing: .04em; color: var(--box-faint); }
+.lamp i { width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, var(--lamp-off-hi), var(--lamp-off) 70%); box-shadow: inset 0 0 0 1px #000; }
+.lamp.lit { color: var(--amber); }
+.lamp.lit i { background: radial-gradient(circle at 40% 35%, var(--amber-hi), var(--amber) 55%, var(--amber-lo)); box-shadow: 0 0 12px 3px color-mix(in srgb, var(--amber) 65%, transparent); }
+.brk.checking .lamp i { animation: blink 1s steps(2, end) infinite; background: var(--amber); }
+@keyframes blink { 50% { opacity: .25; } }
+/* the directory label, inset in its holder; on an open breaker it is a lockout tag instead */
+.strip { position: relative; margin: auto 0 0; padding: 8px 8px 10px; border-top: 1px solid var(--module-rule); color: var(--box-text); }
+.strip b { display: block; min-height: 2.5em; font: 720 var(--fs-13)/1.25 var(--sans); font-stretch: 92%; text-transform: uppercase; letter-spacing: .02em; overflow-wrap: anywhere; }
+.strip .price { display: block; margin-top: 3px; font: 760 var(--fs-18)/1 var(--sans); font-stretch: 86%; letter-spacing: -0.01em; color: var(--box-hi); }
+.strip.tag { margin: auto 4px 9px; padding: 16px 7px 7px; border-top: 0; border-radius: var(--r-1); color: var(--label-ink); background: var(--tag); box-shadow: 0 0 0 2px var(--signal), 0 6px 14px -6px #000; transform-origin: 50% -14px; animation: tag-on .7s cubic-bezier(.3, 1.5, .5, 1) both; rotate: -2.5deg; }
+.strip.tag::before { content: ''; position: absolute; right: 7px; top: 4px; width: 8px; height: 8px; border-radius: 50%; background: var(--module); box-shadow: inset 0 0 0 2px var(--bus); } /* the eyelet */
+.tag-head { position: absolute; left: 7px; top: 3px; font: 800 var(--fs-12)/1 var(--sans); font-stretch: 90%; letter-spacing: .08em; color: var(--signal-ink); }
+.strip .tag-note { display: block; margin-top: 4px; font: 600 var(--fs-12)/1.2 var(--sans); color: var(--signal-ink); }
+.brk.open .strip .price { color: var(--signal-ink); }
+@keyframes tag-on { from { rotate: -16deg; opacity: 0; } }
+.strip.tag { margin-bottom: -6px; z-index: 3; } /* it hangs below the breaker, so taking it off never moves the panel */
+
+/* PayPal: a terminal at the end of the bottom bus. Its own colour and plain type: it is PayPal's box, not ours */
+.terminal { position: relative; align-self: stretch; display: flex; flex-direction: column; margin-bottom: -30px; padding: 10px 10px 12px; border-radius: var(--r-3); background: linear-gradient(180deg, var(--pp-body-hi), var(--pp-body-lo)); color: #fff; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), inset 0 0 0 1px var(--pp-edge), 0 12px 24px -14px #000; }
+.terminal dl { flex: 1; display: flex; flex-direction: column; }
+.terminal dl > div:nth-child(2) { margin-top: 4px; } /* the readouts sit at the foot, the screen at the head */
+.t-port { position: absolute; left: -8px; bottom: -2px; width: 9px; height: 18px; border-radius: var(--r-1) 0 0 var(--r-1); background: var(--slot); box-shadow: inset 0 0 0 1px var(--module-rule); }
+.terminal .t-name { display: flex; align-items: center; gap: 7px; padding: 2px 4px 9px; font: 700 var(--fs-15)/1 var(--sans); }
+.terminal .t-status { order: -2; margin-top: 4px; padding-top: 8px; border-top: 1px solid color-mix(in srgb, var(--go) 35%, transparent); font: 750 var(--fs-16)/1.2 var(--sans); color: var(--go); } /* ready at $X: as big as the problem was */
+.terminal.ready .t-screen { box-shadow: inset 0 0 0 2px var(--go), 0 0 18px color-mix(in srgb, var(--go) 35%, transparent); }
+.terminal .t-status { min-height: calc(1.2em + 13px); }
+.terminal .t-status:empty { visibility: hidden; } /* its row is reserved, so nothing moves when it lands */
+.terminal .t-note { margin: 10px 4px 4px; padding-top: 10px; border-top: 1px solid var(--pp-edge); font-size: var(--fs-12); line-height: 1.35; color: var(--pp-text-dim); }
+.terminal dl { flex: 1 1 auto; }
+.terminal .t-screen { flex: 1 1 auto; justify-content: center; }
+.terminal .t-led { width: 8px; height: 8px; border-radius: 50%; background: var(--pp-led); transition: background .2s, box-shadow .2s; }
+.terminal.ping .t-led { background: var(--go); box-shadow: 0 0 10px 2px var(--go); }
+.panel.energized::after { background: linear-gradient(180deg, var(--live-hi) 0 3px, var(--live) 3px); box-shadow: 0 1px 0 #000, 0 0 26px 7px var(--live-glow); transition: box-shadow .3s; }
+.surge { width: 22px !important; height: 22px !important; margin: -11px 0 0 -11px !important; background: var(--go) !important; box-shadow: 0 0 18px 7px color-mix(in srgb, var(--go) 60%, transparent) !important; } /* mint, so it reads against the cream bus */
+.terminal dl { margin: 0; display: grid; gap: 7px; }
+.terminal dl div { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: baseline; padding: 0 4px; }
+.terminal dt { font-size: var(--fs-12); color: var(--pp-text); }
+.terminal dd { margin: 0; font: 700 var(--fs-17)/1 var(--sans); font-stretch: 88%; text-align: right; }
+/* its screen shows the one number that matters, and it stays at 0 */
+.terminal .t-screen { display: flex; flex-direction: column-reverse; align-items: flex-start; gap: 4px; margin-bottom: 3px; padding: 10px; border-radius: var(--r-2); background: var(--pp-screen); transition: background .4s; box-shadow: inset 0 0 0 1px #000, inset 0 2px 10px rgba(0, 0, 0, .7); }
+.terminal .t-screen dt { color: var(--pp-text-dim); }
+.terminal .t-screen dd { text-align: left; font: 800 var(--fs-56)/1 var(--sans); font-stretch: 86%; color: var(--pp-digit); text-shadow: 0 0 14px color-mix(in srgb, var(--pp-text-dim) 45%, transparent); }
+.terminal.reached .t-screen { background: radial-gradient(120% 90% at 30% 20%, var(--pp-lit-1), var(--pp-lit-2) 60%, var(--pp-lit-3)); }
+.terminal.zero .t-screen { animation: zero 1.5s ease-out; }
+@keyframes zero { 0%, 34%, 68% { box-shadow: inset 0 0 0 2px #fff, 0 0 20px rgba(255, 255, 255, .5); } 17%, 51%, 100% { box-shadow: inset 0 0 0 1px #000, inset 0 2px 10px rgba(0, 0, 0, .7); } }
+
+/* motion: checkouts in flight, and the spark where an open breaker stops them */
+.flyers { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+.flyers .strip .price { color: var(--signal-ink); } /* a lockout tag falling away after a reset */
+.pulse { position: absolute; left: 0; top: 0; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 10px 1px var(--signal); }
+.surge { position: absolute; left: 0; top: 0; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--live-hi); box-shadow: 0 0 16px 6px var(--live-glow); }
+.pulse { width: 14px; height: 14px; margin: -7px 0 0 -7px; box-shadow: 0 0 12px 3px var(--signal); }
+.pulse.through { background: var(--go); box-shadow: 0 0 10px 1px var(--go); }
+.spark { position: absolute; left: 0; top: 0; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; border: 3px solid var(--signal); box-shadow: 0 0 18px var(--signal); }
+
+/* ===== below the box: the work order for the selected breaker, and the printed receipt ===== */
+.work { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 26px; margin-top: 0; align-items: start; }
+.order { padding-top: 16px; }
+.order { min-width: 0; }
+.order-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; }
+.order-head h2 { margin: 0; font: 760 var(--fs-20)/1.2 var(--sans); font-stretch: 104%; }
+.order-head .state-word { font: 750 var(--fs-14)/1 var(--sans); font-stretch: 87%; color: var(--ink-2); }
+.order-head .state-word.open { color: var(--signal-ink); }
+.mistake { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; margin: 10px 0 10px; }
+.mistake .was { font: 500 var(--fs-22)/1 var(--sans); font-stretch: 90%; color: var(--ink-2); text-decoration: line-through; text-decoration-thickness: 2px; }
+.mistake .arrow { color: var(--faint); }
+.mistake .now { font: 800 var(--fs-44)/1 var(--sans); font-stretch: 86%; letter-spacing: -0.02em; color: var(--signal-ink); }
+.mistake .now .ch { display: inline-block; }
+.mistake .now.ok { color: var(--ink); }
+.mistake .ratio.ok { border-color: var(--ink); color: var(--ink); }
+.outcome { margin: 0; font-size: var(--fs-15); color: var(--ink-2); max-width: 60ch; }
+.mistake .ratio { align-self: center; font: 750 var(--fs-13)/1 var(--sans); font-stretch: 87%; padding: 6px 8px; border: 1.5px solid var(--signal); border-radius: var(--r-2); color: var(--signal-ink); }
+.why { display: grid; gap: 6px; font-size: var(--fs-14); max-width: 96ch; }
+.reason { display: flex; gap: 8px; align-items: baseline; }
+.reason.ai span:last-child { font-style: italic; color: var(--ink-2); }
+.why details summary { display: list-item; padding: 12px 0; line-height: 20px; cursor: pointer; color: var(--ink-2); font-size: var(--fs-14); } /* list-item keeps the disclosure marker; 12+20+12 = 44px */
+.src { flex: none; display: inline-block; font: 700 var(--fs-12)/1 var(--sans); font-stretch: 87%; padding: 4px 6px; border-radius: var(--r-1); font-style: normal; }
+.src-rule { background: var(--ink); color: var(--ground); }
+.src-ai { color: var(--ink); border: 1.5px dashed var(--ink-2); padding: 2.5px 5px; }
+.waiting { margin-top: 10px; font-size: var(--fs-14); font-weight: 600; color: var(--signal-ink); }
+.decide { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 16px; margin-top: 10px; }
+.mistake + .decide { margin: 4px 0 18px; } /* the lever under the price, with room before the reasons */
+/* the merchant's lever: press and hold for one second to close the breaker (the only way a hold is released) */
+.hold { position: relative; display: inline-flex; align-items: center; gap: 14px; min-height: 84px; padding: 8px 22px 8px 12px; border: 0; border-radius: var(--r-3); background: var(--box); color: var(--box-hi); cursor: pointer; font: 700 var(--fs-15)/1.2 var(--sans); text-align: left; touch-action: none; user-select: none; }
+.hold .h-win { position: relative; width: 36px; height: 70px; border-radius: var(--r-2); background: var(--slot); overflow: hidden; }
+.hold .h-flag { position: absolute; left: 4px; right: 4px; top: 4px; height: 30px; border-radius: var(--r-1); background: var(--signal); }
+.hold .h-handle { position: absolute; left: 4px; right: 4px; top: 36px; height: 30px; border-radius: var(--r-1); background: linear-gradient(180deg, var(--handle-hi), var(--handle) 30%, var(--handle-lo)); transition: transform .3s cubic-bezier(.3, 1.7, .55, 1); }
+.hold small { display: block; font-weight: 500; font-size: var(--fs-13); color: var(--hold-sub); text-wrap: pretty; }
+.hold { font-size: var(--fs-17); }
+.hold.pressing .h-handle { transform: translateY(-32px); transition: transform 1s linear; } /* the handle climbs while you hold: it is the progress bar */
+.hold.early small { color: var(--signal); }
+.hold.done .h-handle { transform: translateY(-32px); }
+.hold.done .h-flag { opacity: 0; }
+.order .empty-note { color: var(--ink-2); font-size: var(--fs-15); }
+
+/* the receipt: what happened, printed as it happens, out of the box's own printer slot. It stays paper in both themes */
+.receipt { position: relative; margin: 0 10px 0 0; background: var(--paper); color: var(--paper-ink); border-radius: 0 0 var(--r-2) var(--r-2); padding: 14px 18px 14px; box-shadow: 0 1px 0 var(--rule-2); }
+.receipt::before { content: ''; position: absolute; left: -8px; right: -8px; top: -1px; height: 7px; border-radius: 0 0 var(--r-2) var(--r-2); background: var(--slot-deep); box-shadow: 0 1px 0 rgba(255, 255, 255, .05); } /* the printer slot */
+.r-head { display: flex; justify-content: space-between; font: 700 var(--fs-13)/1 var(--sans); font-stretch: 92%; letter-spacing: .04em; text-transform: uppercase; color: var(--paper-faint); padding-bottom: 8px; border-bottom: 1px dashed var(--paper-rule); }
+.r-head #rClock { font-family: var(--mono); letter-spacing: 0; text-transform: none; }
+.r-lines { list-style: none; margin: 0; padding: 6px 0 0; font: var(--fs-13)/1.45 var(--mono); }
+.r-lines li { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 8px; padding: 3px 0; }
+.r-lines li.new { animation: print .32s ease-out; }
+@keyframes print { from { opacity: 0; transform: translateY(-6px); } }
+.r-lines time { color: var(--paper-faint); }
+.r-lines .stop { color: var(--paper-signal); }
+.r-lines .id { color: var(--paper-faint); overflow-wrap: anywhere; }
+.r-lines li:has(.empty) { display: block; }
+.r-lines .empty { display: block; color: var(--paper-faint); font-family: var(--sans); font-size: var(--fs-14); }
+.r-sum { border-bottom: 1px dashed var(--paper-rule); padding: 8px 0; display: grid; gap: 3px; font: var(--fs-13)/1.4 var(--mono); }
+.r-sum div { display: flex; justify-content: space-between; gap: 10px; }
+.r-total { padding: 10px 0 10px; border-bottom: 2px solid var(--paper-ink); display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.r-total span { font: 700 var(--fs-13)/1.2 var(--sans); }
+.r-total strong { font: 800 var(--fs-40)/1 var(--sans); font-stretch: 86%; letter-spacing: -0.02em; }
+.r-foot { margin: 8px 0 0; padding-top: 8px; border-top: 1px dashed var(--paper-rule); font-size: var(--fs-12); color: var(--paper-faint); }
+
+/* tools below: three columns on the page, no cards */
+.tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 36px; margin-top: 56px; border-top: 3px solid var(--ink); }
+.tools-head { grid-column: 1 / -1; display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 18px; padding: 16px 0 4px; }
+.tools-head .kicker { margin: 0; font: 700 var(--fs-13)/1 var(--sans); font-stretch: 90%; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+.tools-head h2 { margin: 0; font: 800 var(--fs-28)/1.1 var(--sans); font-stretch: 110%; letter-spacing: -0.02em; }
+.tool { padding: 18px 0 8px; border-top: 1px solid var(--rule-2); min-width: 0; }
+.tool h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 6px; font: 750 var(--fs-18)/1.2 var(--sans); font-stretch: 104%; }
+.tool-no { display: grid; place-items: center; width: 26px; height: 26px; flex: none; border: 1px solid var(--ink-2); border-radius: var(--r-1); font: 700 var(--fs-13)/1 var(--mono); color: var(--ink-2); }
+.tool > p { margin: 0 0 12px; font-size: var(--fs-14); color: var(--ink-2); }
+.presets { display: grid; gap: 8px; }
+.preset { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; text-align: left; border: 1px solid var(--rule-2); border-radius: var(--r-3); background: var(--sheet); cursor: pointer; transition: border-color .15s; }
+.preset:hover { border-color: var(--ink-2); }
+.preset strong { display: block; font-size: var(--fs-14); }
+.preset span { display: block; font-size: var(--fs-13); color: var(--faint); }
+details.custom { margin-top: 6px; }
+details.custom summary { cursor: pointer; color: var(--ink-2); font-size: var(--fs-14); line-height: 20px; padding: 12px 0; }
+textarea { width: 100%; min-height: 110px; resize: vertical; padding: 10px 12px; border-radius: var(--r-3); border: 1px solid var(--input); background: var(--sheet); font: var(--fs-13)/1.5 var(--mono); }
+select { width: 100%; min-height: 44px; padding: 8px 12px; border-radius: var(--r-3); border: 1px solid var(--input); background: var(--sheet); cursor: pointer; }
+.row { display: flex; gap: 10px; align-items: center; }
+.row > * { flex: 1; min-width: 0; }
+.row > .btn { flex: none; }
+.result { margin-top: 12px; font-size: var(--fs-14); }
+.result:empty { display: none; }
+.more { display: grid; gap: 8px; margin-top: 14px; }
+.more .btn { justify-content: flex-start; white-space: normal; text-align: left; }
+.keybox { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.keybox code { flex: 1 1 200px; min-width: 0; padding: 11px 12px; border-radius: var(--r-3); background: var(--sheet-2); border: 1px solid var(--input); font: var(--fs-13) var(--mono); overflow-wrap: anywhere; }
+.endpoints { margin: 12px 0 0; padding-left: 18px; font-size: var(--fs-14); color: var(--ink-2); }
+.endpoints li + li { margin-top: 4px; }
+.endpoints code { color: var(--ink); font: 600 var(--fs-13)/1.4 var(--mono); }
+.curl { margin: 8px 0 0; padding: 10px 12px; border-radius: var(--r-3); background: var(--sheet-2); font: var(--fs-12)/1.55 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* toasts sit at the top, under the bar, never over the receipt */
+.toasts { position: fixed; left: 50%; top: 66px; transform: translateX(-50%); z-index: 50; display: grid; gap: 8px; width: max-content; max-width: min(520px, calc(100vw - 32px)); }
+.toast { padding: 10px 14px; border-radius: var(--r-3); background: var(--ink); color: var(--ground); font-size: var(--fs-14); transition: opacity .3s, transform .3s; }
+.toast-error { background: var(--error); color: #fff; }
+.toast.out { opacity: 0; transform: translateY(-6px); }
+.empty { padding: 18px 0; color: var(--faint); font-size: var(--fs-14); }
+
+/* ===== the demo shop: a different business, the same craft. A held product shows its open breaker ===== */
+.shop .brand { font-stretch: 100%; font-weight: 750; }
+.shop .mark { width: 30px; height: 30px; border-radius: var(--r-3); display: grid; place-items: center; background: var(--shop-mark); color: #fff; }
+.hero { padding: 26px 0 18px; }
+.hero h1 { margin: 0; font: 780 var(--fs-34)/1.08 var(--sans); font-stretch: 108%; letter-spacing: -0.02em; }
+.hero p { margin: 8px 0 0; max-width: 70ch; color: var(--ink-2); font-size: var(--fs-16); }
+.notice { padding: 12px 16px; margin-bottom: 22px; border-radius: var(--r-3); border: 1px solid var(--rule-2); background: var(--sheet); font-size: var(--fs-14); }
+.products { display: grid; grid-template-columns: repeat(auto-fill, minmax(262px, 1fr)); gap: 18px; }
+.product { display: flex; flex-direction: column; gap: 8px; padding: 18px; background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--r-3); }
+.product .item-meta { font: 650 var(--fs-13)/1 var(--sans); font-stretch: 87%; color: var(--faint); }
+.product h3 { margin: 0; font: 700 var(--fs-17)/1.25 var(--sans); }
+.product .desc { margin: 0; flex: 1; font-size: var(--fs-14); color: var(--ink-2); }
+.product .price { margin: 4px 0 2px; font: 800 var(--fs-28)/1 var(--sans); font-stretch: 88%; letter-spacing: -0.015em; }
+.pay { display: grid; gap: 8px; min-height: 48px; }
+.pay paypal-button, .pay venmo-button { width: 100%; }
+.product.is-paused { border-color: color-mix(in srgb, var(--signal) 50%, var(--rule)); }
+.product.is-paused .price { color: var(--signal-ink); }
+.paused { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; align-items: center; padding: 10px 12px; border-radius: var(--r-3); background: var(--signal-wash); font-size: var(--fs-14); }
+.paused .mini { grid-row: span 2; width: 22px; height: 40px; border-radius: var(--r-1); background: var(--slot); position: relative; overflow: hidden; }
+.paused .mini::before { content: ''; position: absolute; left: 3px; right: 3px; top: 3px; height: 17px; border-radius: var(--r-1); background: var(--signal); }
+.paused .mini::after { content: ''; position: absolute; left: 3px; right: 3px; bottom: 3px; height: 15px; border-radius: var(--r-1); background: var(--handle); }
+.paused strong { color: var(--signal-ink); }
+.order-msg { font-size: var(--fs-14); padding: 10px 12px; border-radius: var(--r-3); background: var(--sheet-2); }
+.order-msg:empty { display: none; }
+.order-msg.ok { background: var(--ok-wash); }
+.order-msg.bad { background: var(--error-wash); }
+
+
+/* the rules, printed on a plate in the box's left column. The AI rule comes first: it is the AI's whole job */
+.rules { list-style: none; margin: 16px 0 0; padding: 12px 0 0; display: grid; gap: 10px; border-top: 1px solid var(--box-rule); font-size: var(--fs-13); line-height: 1.3; color: var(--box-text); }
+.rules li { text-wrap: balance; font-size: var(--fs-14); display: grid; grid-template-columns: 28px 1fr; align-items: start; gap: 6px; }
+.rules .lamp-key, .rules .lever-key { justify-self: center; margin-top: 2px; }
+.rules .fuse-key { margin-top: 4px; }
+.box > .legend { display: none; } /* the same rules, for the narrow layout */
+.btn-start { min-height: 56px; margin-top: 14px; padding: 0 22px; font-size: var(--fs-16); gap: 12px; }
+.btn-start .tn { font: 800 var(--fs-13)/1 var(--sans); opacity: .7; }
+
+
+/* the shop as a printed catalog: a feature, numbered items, rules instead of cards */
+.shop .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); align-items: end; gap: 12px 40px; padding: 30px 0 18px; border-bottom: 3px solid var(--ink); }
+.shop .hero .kicker { margin: 0 0 8px; font: 700 var(--fs-13)/1 var(--sans); font-stretch: 90%; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+.shop .hero h1 { font: 800 var(--fs-56)/.95 var(--sans); font-stretch: 112%; letter-spacing: -0.035em; }
+.shop .hero .promise { display: flex; gap: 12px; align-items: center; margin: 0; font-size: var(--fs-15); color: var(--ink-2); }
+.shop .hero .promise .mini { flex: none; width: 20px; height: 36px; border-radius: var(--r-1); background: var(--slot); position: relative; overflow: hidden; }
+.shop .hero .promise .mini::after { content: ''; position: absolute; left: 3px; right: 3px; top: 3px; height: 14px; border-radius: var(--r-1); background: var(--handle); }
+.shop .notice { margin: 0 0 6px; padding: 10px 0; border: 0; border-radius: 0; background: none; font-size: var(--fs-14); color: var(--faint); }
+.shop .products { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 36px; align-items: start; }
+.shop .product { padding: 18px 0 24px; background: none; border: 0; border-bottom: 1px solid var(--rule-2); border-radius: 0; }
+.shop .product .item-meta { display: flex; justify-content: space-between; gap: 12px; font-size: var(--fs-13); }
+.shop .product .item-no { font: 500 var(--fs-13)/1 var(--mono); color: var(--faint); }
+.shop .product h3 { font-size: var(--fs-20); font-stretch: 104%; }
+.shop .product .price { font-size: var(--fs-34); }
+.shop .product.featured { grid-column: span 2; margin: 18px 0 0; padding: 30px 32px 30px; border: 0; border-radius: var(--r-2); background: var(--sheet); box-shadow: inset 0 0 0 1px var(--rule); }
+.shop .product.featured h3 { font-size: var(--fs-40); line-height: 1.05; letter-spacing: -0.02em; font-stretch: 110%; max-width: 16ch; }
+.shop .product.featured .desc { flex: 0; font-size: var(--fs-16); }
+.shop .product.featured .price { margin-top: auto; font-size: var(--fs-72); letter-spacing: -0.03em; }
+.shop .product.featured { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: 44px; row-gap: 10px; align-content: start; }
+.shop .product.featured .item-meta { grid-column: 1 / -1; }
+.shop .product.featured h3 { grid-column: 1; grid-row: 2; }
+.shop .product.featured .desc { grid-column: 1; grid-row: 3; }
+.shop .product.featured .price { grid-column: 2; grid-row: 2; align-self: end; margin: 0; }
+.shop .product.featured .pay, .shop .product.featured .paused, .shop .product.featured > .faint { grid-column: 2; grid-row: 3; align-self: start; }
+.shop .product.featured .order-msg { grid-column: 2; grid-row: 4; }
+.shop .product.featured.is-paused { box-shadow: inset 0 0 0 2px var(--signal); }
+@media (max-width: 1000px) { .shop .product.featured { display: flex; } .shop .hero { grid-template-columns: minmax(0, 1fr); } .shop .products { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .shop .hero h1 { font-size: var(--fs-40); } .shop .products { grid-template-columns: minmax(0, 1fr); } .shop .product.featured { grid-column: auto; grid-row: auto; padding: 22px 18px; } .shop .product.featured h3 { font-size: var(--fs-28); } .shop .product.featured .price { font-size: var(--fs-56); } }
+
+/* ===== responsive ===== */
+@media (max-width: 1200px) {
+  .story { flex-wrap: wrap; } .tour { margin-left: 0; }
+  .story h1 { white-space: normal; }
+  .work { grid-template-columns: minmax(0, 1fr); }
+  .panel { --src: 112px; --term: 184px; --gap: 18px; }
+  .panel::before { left: 60px; } .jack { left: 49px; }
+}
+/* narrower: the panel turns on its side. The shop's bus runs down the left, PayPal's down the right */
+@media (max-width: 1000px) {
+  .panel { --flow: v; display: block; padding: 0; }
+  .panel::before, .panel::after { display: none; }
+  .source { display: flex; align-items: baseline; gap: 10px; min-height: 40px; padding: 10px 0 0 40px; }
+  .jack { left: 3px; top: 8px; }
+  .rack { position: relative; grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 14px 26px 0; }
+  .rack::before, .rack::after { content: ''; position: absolute; width: 8px; border-radius: var(--r-1); background: linear-gradient(90deg, var(--bus-hi) 0 2px, var(--bus) 2px 5px, var(--bus-lo) 5px); }
+  .rack::before { left: 11px; top: -12px; bottom: 36px; }
+  .rack::after { right: 11px; top: 50px; bottom: -16px; }
+  .brk { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: repeat(3, auto); column-gap: 12px; row-gap: 5px; align-items: center; padding: 8px 10px; }
+  .brk::before, .brk::after { top: 50%; bottom: auto; left: auto; width: 14px; height: 4px; margin: -2px 0 0; }
+  .brk { padding: 8px 10px; }
+  .brk::before { left: -8px; width: 8px; }
+  .brk::after { right: -8px; width: 8px; }
+  .brk.open::after { background: repeating-linear-gradient(90deg, var(--dead) 0 4px, transparent 4px 7px); }
+  .embers, .rating, .rules { display: none; }
+  .box > .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 14px 0 0; padding-top: 10px; border-top: 1px solid var(--box-rule); font-size: var(--fs-13); color: var(--box-text); }
+  .rack::before, .rack::after { height: auto; box-shadow: none; } .rack::before { right: auto; }
+  .win { grid-row: 1 / 4; width: 30px; height: 64px; margin: 0; }
+  .win .flag { height: 26px; } .win .handle { height: 27px; }
+  .strip, .strip.tag { margin: 0; rotate: none; animation: none; }
+  .strip:not(.tag) { border-top: 0; padding: 0; }
+  .strip .tag-note { display: none; }
+  .tag-head { display: none; } /* the row already says TRIPPED */
+  .strip.tag { padding-top: 7px; }
+  .strip { grid-column: 2; grid-row: 1 / 4; align-self: stretch; margin: 0; border-radius: var(--r-2); display: grid; align-content: center; }
+  .strip b { min-height: 0; }
+  .state { grid-column: 3; grid-row: 1; margin: 0; text-align: right; }
+  .tally { grid-column: 3; grid-row: 2; margin: 0; justify-content: flex-end; }
+  .meters { grid-column: 3; grid-row: 3; margin: 0; justify-content: flex-end; flex-wrap: nowrap; }
+  .terminal { margin: 16px 0 0; }
+  .t-port { left: auto; right: 7px; top: -8px; bottom: auto; width: 16px; height: 9px; border-radius: var(--r-1) var(--r-1) 0 0; }
+  .tools { grid-template-columns: minmax(0, 1fr); }
+  .tool, .tool:first-child { padding: 18px 0 8px; border-left: 0; border-top: 1px solid var(--rule); }
+  .tool:first-child { border-top: 0; }
+}
+@media (max-width: 640px) {
+  .topbar { padding: 6px 16px; flex-wrap: wrap; gap: 8px 12px; }
+  .ctx { padding-left: 12px; } .ctx .tag, .sync { display: none; }
+  .wrap { padding: 0 16px 40px; }
+  .story { gap: 12px; }
+  .story h1 { font-size: var(--fs-28); }
+  .hold { position: fixed; left: 16px; right: 16px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 30; box-shadow: 0 10px 30px rgba(0, 0, 0, .45); }
+  body:has(.hold) .wrap { padding-bottom: 130px; }
+  .tour { width: 100%; } .tour-label { display: none; }
+  .lbl-long { display: none; } .lbl-short { display: inline; }
+  .fuse { width: 34px; } .lamp { font-size: 0; gap: 0; } /* phones: a narrower fuse and a bare AI lamp give the label more room */
+  .tour ol { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; gap: 6px; }
+  .tstep + .tstep::before { display: none; }
+  .tstep { gap: 5px; } .tstep .btn { flex: 1; min-width: 0; padding: 6px 8px; white-space: normal; font-size: var(--fs-13); line-height: 1.2; }
+  .box { padding: 12px 12px 14px; border-radius: var(--r-3); }
+  .plate .legend { margin-left: 0; font-size: var(--fs-13); }
+  .tally .tl { display: none; }
+  .row { flex-wrap: wrap; } .row > select { flex-basis: 100%; }
+  .mistake .now { font-size: var(--fs-34); }
+  .r-total strong { font-size: var(--fs-34); }
+  .hero h1 { font-size: var(--fs-28); }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

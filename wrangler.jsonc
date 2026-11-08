@@ -1,0 +1,27 @@
+{
+  // Tripwire: Worker + one SQLite-backed Durable Object per demo store. Secrets (set with `wrangler secret put`):
+  // PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET (a PayPal sandbox app) and GROQ_API_KEY. For local dev, put them in .dev.vars.
+  "name": "tripwire-demo",
+  "account_id": "3fc7c7171e998259b80e2902ab3eaade",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": true },
+  "assets": { "directory": "./public", "binding": "ASSETS", "html_handling": "auto-trailing-slash", "not_found_handling": "404-page", "run_worker_first": ["/api/*"] },
+  "durable_objects": { "bindings": [{ "name": "STORE", "class_name": "Store" }, { "name": "BUDGET", "class_name": "Budget" }] },
+  // The PayPal webhook this Worker verifies deliveries against (not a secret: verification also needs the app's
+  // credentials). Printed by tools/register_webhook.mjs; a fork registers its own and puts its id here.
+  "vars": { "PAYPAL_WEBHOOK_ID": "5KY10890MN503462V" },
+  // hourly self-check of PayPal, Groq and Channel3, shown by /api/health
+  "triggers": { "crons": ["17 * * * *"] },
+  // Abuse limits for the public demo (approximate, per Cloudflare location): new stores per IP, and reads/writes per store.
+  "ratelimits": [
+    { "name": "LIMIT_SESSION", "namespace_id": "41001", "simple": { "limit": 10, "period": 60 } },
+    { "name": "LIMIT_READ", "namespace_id": "41002", "simple": { "limit": 120, "period": 60 } },
+    { "name": "LIMIT_WRITE", "namespace_id": "41003", "simple": { "limit": 40, "period": 60 } },
+    // the checkout API (docs/GATE.md): calls per store per minute from a merchant's server
+    { "name": "LIMIT_API", "namespace_id": "41004", "simple": { "limit": 120, "period": 60 } }
+  ],
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Store"] }, { "tag": "v2", "new_sqlite_classes": ["Budget"] }]
+}

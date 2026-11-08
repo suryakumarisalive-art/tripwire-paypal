@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tripwire: merchant console</title>
+  <meta name="description" content="Tripwire is a circuit breaker at PayPal checkout: a slipped decimal, a bad import or a bot swarm hits the breaker before PayPal moves any money.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&display=swap">
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="mark" id="brandMark"></span>Tripwire</a>
+    <span class="ctx">Fernbrook Supply<span class="tag">PayPal sandbox</span></span>
+    <nav>
+      <span class="sync off" id="syncHint" role="status">Connecting…</span>
+      <a class="btn" id="storeLink" href="/store.html" target="_blank" rel="noopener">Open the store</a>
+      <button class="btn btn-ghost" id="resetBtn" type="button">Reset demo</button>
+      <button class="btn btn-ghost" id="themeBtn" type="button">Dark</button>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="story">
+      <h1>Wrong prices stop here. <span>Before PayPal.</span></h1>
+      <p class="dek">Tripwire is a circuit breaker between your store and PayPal checkout. A slipped decimal, a bad supplier feed or a rush of bots trips that product’s breaker, so nobody pays the wrong price. <strong>Only you can reset it.</strong></p>
+    </section>
+
+    <section class="box" aria-labelledby="boxTitle">
+      <div class="plate">
+        <h2 class="plate-name" id="boxTitle">Tripwire</h2>
+        <span class="plate-sub" id="plateSub"></span>
+        <div class="filter" role="group" aria-label="Show breakers">
+          <button type="button" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" data-filter="stopped" aria-pressed="false" id="filterStopped">Needs you</button>
+        </div>
+        <div class="tour">
+          <span class="tour-label" id="tourTitle">Test it</span>
+          <ol id="steps" aria-labelledby="tourTitle"></ol>
+        </div>
+      </div>
+      <div class="panel" id="panel">
+        <div class="source"><span class="jack" aria-hidden="true"></span><b>Checkout</b><span>Shoppers and bots</span>
+          <ul class="rules" aria-label="The rules">
+            <li><span class="lamp-key" aria-hidden="true"></span>The AI can add a hold, never lift one.</li>
+            <li><span class="fuse-key" aria-hidden="true"></span>More than 5 checkouts in a minute trip it.</li>
+            <li><span class="lever-key" aria-hidden="true"></span>Only your lever resets it.</li>
+          </ul>
+        </div>
+        <div class="rack" id="rack" role="group" aria-label="Breakers, one per product"><p class="empty">Loading the breakers…</p></div>
+        <div class="terminal" id="terminal" aria-labelledby="ppName">
+          <span class="t-port" aria-hidden="true"></span>
+          <div class="t-name" id="ppName"><span class="t-led" aria-hidden="true"></span>PayPal</div>
+          <dl>
+            <div class="lead t-screen"><dt id="ppLead">orders at a tripped price</dt><dd class="num" id="ppHeld">0</dd><span class="t-status" id="ppStatus" role="status"></span></div>
+            <div><dt>captured</dt><dd class="num" id="ppCaptured">$0.00</dd></div>
+            <div><dt>authorized, waiting</dt><dd class="num" id="ppWaiting">0</dd></div>
+          </dl>
+          <p class="t-note">Every order is an authorization. It is captured only at a price you trust; otherwise it is voided.</p>
+        </div>
+        <div class="flyers" id="flyers" aria-hidden="true"></div>
+      </div>
+      <p class="legend">
+        <span><span class="lamp-key" aria-hidden="true"></span>The AI can add a hold, never lift one.</span>
+        <span><span class="fuse-key" aria-hidden="true"></span>More than 5 checkouts in a minute trip it.</span>
+        <span><span class="lever-key" aria-hidden="true"></span>Only your lever resets it.</span>
+      </p>
+    </section>
+
+    <section class="work">
+      <div class="order" id="order" aria-live="polite"><p class="empty-note">Loading…</p></div>
+      <section class="receipt" aria-labelledby="rTitle">
+        <div class="r-head"><span id="rTitle">Tripwire receipt</span><span id="rClock"></span></div>
+        <div class="r-total"><span>Kept from<br>wrong prices</span><strong class="num" id="rKept">$0.00</strong></div>
+        <div class="r-sum">
+          <div><span>Checkouts refused</span><span class="num" id="rRefused">0</span></div>
+          <div><span>PayPal orders at a tripped price</span><span class="num">0</span></div>
+          <div><span>Voided, money released</span><span class="num" id="rVoided">0</span></div>
+          <div><span>Of that, from the demo’s simulated bots</span><span class="num" id="rBots">$0.00</span></div>
+        </div>
+        <ol class="r-lines" id="timeline" aria-live="polite" aria-label="Receipt lines, newest last. PayPal IDs are real sandbox IDs."><li><span class="empty">Nothing printed yet. Start with step 1.</span></li></ol>
+        <p class="r-foot">Every PayPal ID printed here is a real sandbox ID.</p>
+      </section>
+    </section>
+
+    <section class="tools" aria-labelledby="toolsTitle">
+      <header class="tools-head">
+        <p class="kicker">Beyond the three steps</p>
+        <h2 id="toolsTitle">Test it your way.</h2>
+      </header>
+      <div class="tool">
+        <h3><span class="tool-no" aria-hidden="true">A</span>Import a price list</h3>
+        <p>Pick a preset, each one a real kind of pricing mistake, or paste your own CSV.</p>
+        <div class="presets" id="presets"></div>
+        <details class="custom">
+          <summary>Paste your own CSV</summary>
+          <label class="sr-only" for="csvInput">CSV to import</label>
+          <textarea id="csvInput" spellcheck="false" placeholder="sku,name,price&#10;TV-BRAVIA-65,,1299.00"></textarea>
+          <div class="row" style="margin-top:8px"><span class="faint" style="font-size:13px">Up to 100 rows</span><button class="btn btn-primary" id="importBtn" type="button">Import</button></div>
+        </details>
+        <div class="result" id="importResult"></div>
+      </div>
+
+      <div class="tool">
+        <h3><span class="tool-no" aria-hidden="true">B</span>Point the bots anywhere</h3>
+        <p>25 checkouts hit one product at the same moment, the way deal bots and AI shopping agents pounce on a mispriced listing. PayPal test cards, no login.</p>
+        <div class="row">
+          <label class="sr-only" for="swarmSku">Product to swarm</label>
+          <select id="swarmSku"></select>
+          <button class="btn btn-primary" id="swarmBtn" type="button">Release 25 bots</button>
+        </div>
+        <div class="result" id="swarmResult"></div>
+        <div class="more" id="moreDemos"></div>
+      </div>
+
+      <div class="tool">
+        <h3><span class="tool-no" aria-hidden="true">C</span>Connect your own checkout</h3>
+        <p>Your server asks Tripwire before it creates a PayPal order, and again before it captures. Those sales print on the receipt too.</p>
+        <div class="keybox">
+          <span class="sr-only">Your API key:</span>
+          <code class="mono" id="apiKey">Loading…</code>
+          <button class="btn btn-ghost" id="revealKey" type="button">Show</button>
+          <button class="btn" id="copyKey" type="button">Copy</button>
+        </div>
+        <ul class="endpoints">
+          <li><code>POST /api/v1/check</code> before you create the PayPal order</li>
+          <li><code>POST /api/v1/capture-check</code> before you capture it</li>
+          <li><code>POST /api/mcp</code> for AI agents: <code>check_price</code> and <code>check_capture</code></li>
+        </ul>
+        <details class="custom"><summary>Example request</summary><pre class="curl mono" id="curl"></pre></details>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="/console.js"></script>
+</body>
+</html>

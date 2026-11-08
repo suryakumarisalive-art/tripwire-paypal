@@ -1,0 +1,2293 @@
+{
+  "summary": {
+    "cases": {
+      "mistakes": 30,
+      "sales": 27
+    },
+    "knownItem": {
+      "mistakesHeld_rulesFire": "28/30 (93%)",
+      "mistakesHeld_tripwire": "28/30 (93%)",
+      "salesBlocked_rulesFailClosed": "27/27 (100%)",
+      "salesBlocked_tripwire": "9/27 (33%)",
+      "missed": [
+        "M20 Sony FE 16-35mm f/2.8 GM lens (preorder) 1698 (normal 2198) AI:ok",
+        "M27 Apple iPhone 11, 64GB 332 (normal 515) AI:suspicious"
+      ],
+      "falseHolds": [
+        "S02 TCL 65-inch QM5K Series 4K QD-Mini LED Google TV 449.99 (regular 900) AI:suspicious TCL 65\" QD‑Mini LED TVs cost $800‑$1200.",
+        "S03 TCL 85-inch Q5K Series 4K QLED Google TV 599.99 (regular 1200) AI:implausible TCL 85\" QLED TVs sell for $2000‑$2500.",
+        "S04 Sony WH-1000XM5 noise-cancelling headphones 198 (regular 399.99) AI:suspicious Sony WH‑1000XM5 headphones normally $350‑$400.",
+        "S07 Ring Battery Doorbell 50 (regular 100) AI:suspicious Ring Battery Doorbell normally $100‑$120.",
+        "S15 TCL 85-inch Class S4 4K UHD HDR Roku TV 498 (regular 999) AI:implausible TCL 85\" S4 TV costs $1500‑$2000 new.",
+        "S16 Acer Chromebook 315 15.6-inch (Intel N4500, 4GB, 64GB eMMC) 109 (regular 218) AI:suspicious Acer Chromebook 315 usually $200‑$250.",
+        "S19 iRobot Roomba 104 Vac robot vacuum (Q311020) 130 (regular 250) AI:suspicious iRobot Roomba 104 normally $250‑$300.",
+        "S25 Marmot Guides Down Hooded Jacket (men's) 96 (regular 275) AI:implausible Marmot Guides Down Hooded Jacket typically $250‑$300; $96 seems missing a digit.",
+        "S26 The North Face Front Range Jacket (men's) 52 (regular 130) AI:suspicious The North Face Front Range Jacket usually $100‑$130; $52 is unusually low."
+      ]
+    },
+    "newItem": {
+      "mistakesHeld_rulesFire": "0/30 (0%)",
+      "mistakesHeld_tripwire": "27/30 (90%)",
+      "salesBlocked_rulesFailClosed": "27/27 (100%)",
+      "salesBlocked_tripwire": "7/27 (26%)",
+      "missed": [
+        "M20 Sony FE 16-35mm f/2.8 GM lens (preorder) 1698 (normal 2198) AI:ok",
+        "M27 Apple iPhone 11, 64GB 332 (normal 515) AI:ok",
+        "M30 Corsair Dominator Titanium RGB 48GB (2x24GB) DDR5 memory kit 239.99 (normal 500) AI:ok"
+      ],
+      "falseHolds": [
+        "S02 TCL 65-inch QM5K Series 4K QD-Mini LED Google TV 449.99 (regular 900) AI:implausible TCL 65\" QD‑Mini LED typically $1200+, $449.99 is far too low.",
+        "S03 TCL 85-inch Q5K Series 4K QLED Google TV 599.99 (regular 1200) AI:implausible 85\" QLED TVs cost $2500‑$2800, $599.99 is implausible.",
+        "S07 Ring Battery Doorbell 50 (regular 100) AI:suspicious Ring Battery Doorbell normally $99‑$119, $50 is about 50% off.",
+        "S15 TCL 85-inch Class S4 4K UHD HDR Roku TV 498 (regular 999) AI:implausible 85\" TCL S4 TV costs $2500‑$3000, $498 is far too low.",
+        "S16 Acer Chromebook 315 15.6-inch (Intel N4500, 4GB, 64GB eMMC) 109 (regular 218) AI:suspicious Acer Chromebook 315 normally $250‑$300, $109 is >40% off.",
+        "S19 iRobot Roomba 104 Vac robot vacuum (Q311020) 130 (regular 250) AI:suspicious Roomba 104 usually $300‑$350, $130 is >40% off.",
+        "S27 The North Face Apex Bionic Jacket (women's) 75 (regular 150) AI:implausible The North Face Apex Bionic Jacket normally $180‑$250 new."
+      ]
+    },
+    "model": "openai/gpt-oss-120b via Groq",
+    "ranAt": "2026-11-06T17:48:53.766Z"
+  },
+  "known": [
+    {
+      "id": "M01",
+      "kind": "mistake",
+      "product": "Canon EF 800mm f/5.6L IS USM lens",
+      "normal": 1300000,
+      "price": 9450,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        1200000,
+        1500000
+      ],
+      "aiExplanation": "Canon 800mm lens normally $13k-$15k new.",
+      "held": true,
+      "source": "https://engadget.com/2019/07/18/amazon-prime-day-pricing-error-camera-gear"
+    },
+    {
+      "id": "M02",
+      "kind": "mistake",
+      "product": "Cartier 18k rose-gold and diamond earrings",
+      "normal": 1400000,
+      "price": 1400,
+      "ruleCodes": [
+        "DECIMAL_SHIFT",
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        1200000,
+        1600000
+      ],
+      "aiExplanation": "Cartier rose‑gold diamond earrings cost around $14k‑$16k.",
+      "held": true,
+      "source": "https://www.nbcnews.com/news/latino/man-buys-14000-cartier-earrings-14-company-posts-price-error-website-rcna150046"
+    },
+    {
+      "id": "M03",
+      "kind": "mistake",
+      "product": "Sony A6000 camera with 16-50mm lens bundle",
+      "normal": 55000,
+      "price": 9450,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        50000,
+        60000
+      ],
+      "aiExplanation": "Sony A6000 bundle usually $550‑$600.",
+      "held": true,
+      "source": "https://engadget.com/2019/07/18/amazon-prime-day-pricing-error-camera-gear"
+    },
+    {
+      "id": "M04",
+      "kind": "mistake",
+      "product": "Cathay Pacific round-trip premium-cabin fare, Da Nang (Vietnam) to New York",
+      "normal": 1600000,
+      "price": 67500,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        1200000,
+        1800000
+      ],
+      "aiExplanation": "Premium‑cabin Da Nang‑NY fare typically $12k‑$18k.",
+      "held": true,
+      "source": "https://fortune.com/2019/01/02/cathay-pacific-pricing-gaffe"
+    },
+    {
+      "id": "M05",
+      "kind": "mistake",
+      "product": "ANA first-class round trip, Jakarta to Aruba via Tokyo and New York",
+      "normal": 1630000,
+      "price": 89000,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        1200000,
+        1800000
+      ],
+      "aiExplanation": "ANA first‑class Jakarta‑Aruba fare usually $12k‑$18k.",
+      "held": true,
+      "source": "https://www.yahoo.com/news/japans-largest-airline-canceling-10-153915133.html"
+    },
+    {
+      "id": "M06",
+      "kind": "mistake",
+      "product": "Qantas first-class round trip, Sydney to Los Angeles",
+      "normal": 1340000,
+      "price": 335000,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        1200000,
+        1500000
+      ],
+      "aiExplanation": "Qantas Sydney‑LA first class normally $13k‑$15k.",
+      "held": true,
+      "source": "https://onemileatatime.com/?p=326162"
+    },
+    {
+      "id": "M07",
+      "kind": "mistake",
+      "product": "Canon EOS R8 camera with RF 24-105mm lens bundle",
+      "normal": 161300,
+      "price": 4350,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        150000,
+        180000
+      ],
+      "aiExplanation": "Canon EOS R8 bundle costs about $1.6k‑$1.8k.",
+      "held": true,
+      "source": "https://www.srf.ch/sendungen/kassensturz-espresso/espresso/vermeintliches-schnaeppchen-digitec-verkauft-kamera-fuer-35-statt-1299-franken"
+    },
+    {
+      "id": "M08",
+      "kind": "mistake",
+      "product": "Apple iPad Air 13-inch",
+      "normal": 101500,
+      "price": 1730,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        50000,
+        70000
+      ],
+      "aiExplanation": "iPad Air (10.9‑inch) retails around $600‑$700.",
+      "held": true,
+      "source": "https://www.ilpost.it/2025/11/27/mediaworld/"
+    },
+    {
+      "id": "M09",
+      "kind": "mistake",
+      "product": "Shell premium gasoline (per gallon)",
+      "normal": 699,
+      "price": 69,
+      "ruleCodes": [
+        "DECIMAL_SHIFT",
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        300,
+        400
+      ],
+      "aiExplanation": "US gasoline per gallon is about $3‑$4.",
+      "held": true,
+      "source": "https://cbs58.com/news/gas-mistakenly-priced-at-69-cents-a-gallon-at-california-shell-station"
+    },
+    {
+      "id": "M10",
+      "kind": "mistake",
+      "product": "Dell 19-inch LCD monitor (S14E1909WTW)",
+      "normal": 22884,
+      "price": 1526,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        18000,
+        25000
+      ],
+      "aiExplanation": "Dell 19‑inch monitor normally $200‑$250.",
+      "held": true,
+      "source": "https://www.networkworld.com/article/784032/computers-dell-ordered-to-sell-19-inch-lcd-displays-for-15-in-taiwan.html"
+    },
+    {
+      "id": "M11",
+      "kind": "mistake",
+      "product": "United Airlines first-class round trip, London to Newark",
+      "normal": 561800,
+      "price": 7400,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        500000,
+        650000
+      ],
+      "aiExplanation": "United first‑class London‑Newark fare is $5k‑$6.5k.",
+      "held": true,
+      "source": "https://www.foxnews.com/travel/united-offered-first-class-tickets-from-newark-to-london-for-74"
+    },
+    {
+      "id": "M12",
+      "kind": "mistake",
+      "product": "Microsoft Xbox One console",
+      "normal": 50900,
+      "price": 12060,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        25000,
+        35000
+      ],
+      "aiExplanation": "Xbox One console typically $300‑$350.",
+      "held": true,
+      "source": "https://www.theregister.com/2017/09/14/argos_says_technical_issue_hit_digital_laminated_catalogue/"
+    },
+    {
+      "id": "M13",
+      "kind": "mistake",
+      "product": "Panasonic 50-inch 3D plasma TV",
+      "normal": 170300,
+      "price": 30800,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        150000,
+        200000
+      ],
+      "aiExplanation": "Panasonic 50\" 3D plasma TV usually $1.7k‑$2k.",
+      "held": true,
+      "source": "https://www.sportsvideo.org/2012/01/20/petition-forces-ms-to-honor-orders-after-pricing-error-puts-1099-3dtvs-on-sale-for-199/"
+    },
+    {
+      "id": "M14",
+      "kind": "mistake",
+      "product": "DeWalt mechanics tool set",
+      "normal": 70000,
+      "price": 9900,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        60000,
+        80000
+      ],
+      "aiExplanation": "DeWalt mechanic tool set costs $700‑$800.",
+      "held": true,
+      "source": "https://daily.slickdeals.net/shopping/the-latest-huge-price-mistake-proves-our-online-shopping-theory-video"
+    },
+    {
+      "id": "M15",
+      "kind": "mistake",
+      "product": "HD flat-screen TV (model not named)",
+      "normal": 60000,
+      "price": 885,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        50000,
+        80000
+      ],
+      "aiExplanation": "HD flat‑screen TV typically $600‑$800.",
+      "held": true,
+      "source": "http://www.christianpost.com/news/walmart-glitch-makes-video-games-18-hdtvs-8-85-thousands-of-online-orders-canceled.html"
+    },
+    {
+      "id": "M16",
+      "kind": "mistake",
+      "product": "Apple MacBook (model not named)",
+      "normal": 87000,
+      "price": 302,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        80000,
+        120000
+      ],
+      "aiExplanation": "Apple MacBook models sell for $900‑$1.2k.",
+      "held": true,
+      "source": "https://www.ewn.co.za/2024/05/26/sans-purchase-high-end-products-at-fraction-of-original-price-after-makro-app-glitch"
+    },
+    {
+      "id": "M17",
+      "kind": "mistake",
+      "product": "Turkish Airlines business-class one-way, Vancouver to Milan via Montreal and Istanbul",
+      "normal": 275000,
+      "price": 55000,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        250000,
+        300000
+      ],
+      "aiExplanation": "Turkish Airlines business one‑way fare about $2.7k‑$3k.",
+      "held": true,
+      "source": "https://www.tovima.com/wsj/i-snagged-a-550-business-class-ticket-to-italy-then-the-airline-found-out/"
+    },
+    {
+      "id": "M18",
+      "kind": "mistake",
+      "product": "Segway Ninebot Max electric scooter",
+      "normal": 52000,
+      "price": 6000,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        45000,
+        55000
+      ],
+      "aiExplanation": "Segway Ninebot Max normally $500‑$550.",
+      "held": true,
+      "source": "https://daily.slickdeals.net/shopping/most-exciting-price-mistakes-all-time/"
+    },
+    {
+      "id": "M19",
+      "kind": "mistake",
+      "product": "Samsung QLED 8K TV bundle",
+      "normal": 500000,
+      "price": 15000,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        400000,
+        600000
+      ],
+      "aiExplanation": "Samsung QLED 8K TV bundles cost $5k‑$6k.",
+      "held": true,
+      "source": "https://daily.slickdeals.net/shopping/most-exciting-price-mistakes-all-time/"
+    },
+    {
+      "id": "M20",
+      "kind": "mistake",
+      "product": "Sony FE 16-35mm f/2.8 GM lens (preorder)",
+      "normal": 219800,
+      "price": 169800,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        190000,
+        220000
+      ],
+      "aiExplanation": "Sony FE 16‑35mm f/2.8 GM lens $1.9k‑$2.2k.",
+      "held": false,
+      "source": "https://daily.slickdeals.net/shopping/amazon-price-mistake-best-current-reports/"
+    },
+    {
+      "id": "M21",
+      "kind": "mistake",
+      "product": "Panasonic camera (model not named)",
+      "normal": 39999,
+      "price": 3750,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        35000,
+        45000
+      ],
+      "aiExplanation": "Panasonic camera models retail $350‑$450.",
+      "held": true,
+      "source": "https://daily.slickdeals.net/shopping/recent-price-mistakes-you-missed/"
+    },
+    {
+      "id": "M22",
+      "kind": "mistake",
+      "product": "Ultimate Ears Boom 3 Bluetooth speaker",
+      "normal": 12970,
+      "price": 4250,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        10000,
+        13000
+      ],
+      "aiExplanation": "Ultimate Ears Boom 3 speaker $120‑$130.",
+      "held": true,
+      "source": "https://www.lalibre.be/economie/entreprises-startup/2023/12/01/une-enceinte-a-39-au-lieu-de-119-la-fnac-plaide-lerreur-et-annule-les-commandes-testachats-contre-attaque-GWXG47MDYFA2NG5KAZOZ3W74GY/"
+    },
+    {
+      "id": "M23",
+      "kind": "mistake",
+      "product": "Professional digital camera (two models, not named)",
+      "normal": 296300,
+      "price": 52900,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        250000,
+        320000
+      ],
+      "aiExplanation": "Professional digital cameras usually $2.5k‑$3.2k.",
+      "held": true,
+      "source": "https://www.publimetro.com.mx/noticias/2023/02/08/tienda-online-vende-camaras-profesionales-de-56-mil-en-10-mil-pesos-por-error"
+    },
+    {
+      "id": "M24",
+      "kind": "mistake",
+      "product": "HP 200 G4 All-in-One desktop computer",
+      "normal": 66500,
+      "price": 5510,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        60000,
+        70000
+      ],
+      "aiExplanation": "HP 200 G4 All‑in‑One costs $650‑$700.",
+      "held": true,
+      "source": "https://www.elsiglodetorreon.com.mx/noticia/2022/estos-fueron-los-cinco-errores-de-etiquetado-mas-graves-durante-el-buen-fin.html"
+    },
+    {
+      "id": "M25",
+      "kind": "mistake",
+      "product": "Armani jacket (model not named)",
+      "normal": 82400,
+      "price": 82,
+      "ruleCodes": [
+        "DECIMAL_SHIFT",
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        70000,
+        90000
+      ],
+      "aiExplanation": "Armani jacket typically $800‑$900.",
+      "held": true,
+      "source": "https://www.elsiglodetorreon.com.mx/noticia/2022/estos-fueron-los-cinco-errores-de-etiquetado-mas-graves-durante-el-buen-fin.html"
+    },
+    {
+      "id": "M26",
+      "kind": "mistake",
+      "product": "Samsung gas washer/dryer center",
+      "normal": 343800,
+      "price": 57700,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        250000,
+        350000
+      ],
+      "aiExplanation": "Typical new washer/dryer combos cost $2500‑$3500.",
+      "held": true,
+      "source": "https://www.elsiglodetorreon.com.mx/noticia/2022/estos-fueron-los-cinco-errores-de-etiquetado-mas-graves-durante-el-buen-fin.html"
+    },
+    {
+      "id": "M27",
+      "kind": "mistake",
+      "product": "Apple iPhone 11, 64GB",
+      "normal": 51500,
+      "price": 33200,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        59900,
+        69900
+      ],
+      "aiExplanation": "iPhone 11 64GB usually $599‑$699 new.",
+      "held": false,
+      "source": "https://www.elsiglodetorreon.com.mx/noticia/2022/estos-fueron-los-cinco-errores-de-etiquetado-mas-graves-durante-el-buen-fin.html"
+    },
+    {
+      "id": "M28",
+      "kind": "mistake",
+      "product": "Motorcycle (three models, not named)",
+      "normal": 335800,
+      "price": 336,
+      "ruleCodes": [
+        "DECIMAL_SHIFT",
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        300000,
+        500000
+      ],
+      "aiExplanation": "Motorcycles cost $3000‑$5000 new.",
+      "held": true,
+      "source": "https://www.yucatan.com.mx/mexico/2022/12/09/tienda-departamental-oferta-motos-en-menos-de-70-pesos-piden-ayuda-de-profeco-367787.html"
+    },
+    {
+      "id": "M29",
+      "kind": "mistake",
+      "product": "Sony a7R mirrorless camera (name from the article's link)",
+      "normal": 189800,
+      "price": 19999,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        250000,
+        300000
+      ],
+      "aiExplanation": "Sony a7R mirrorless cameras sell for $2500‑$3000.",
+      "held": true,
+      "source": "https://daily.slickdeals.net/shopping/amazon-price-mistake-best-current-reports/"
+    },
+    {
+      "id": "M30",
+      "kind": "mistake",
+      "product": "Corsair Dominator Titanium RGB 48GB (2x24GB) DDR5 memory kit",
+      "normal": 50000,
+      "price": 23999,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        25000,
+        30000
+      ],
+      "aiExplanation": "48GB DDR5 kits typically $250‑$300.",
+      "held": true,
+      "source": "https://www.notebookcheck.net/Corsair-is-reportedly-canceling-DDR5-RAM-orders-due-to-pricing-mistake-offering-expired-coupon-codes-as-an-apology.1195239.0.html"
+    },
+    {
+      "id": "S01",
+      "kind": "sale",
+      "product": "LG 65-inch OLED evo C4 TV",
+      "normal": 270000,
+      "price": 139400,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        250000,
+        300000
+      ],
+      "aiExplanation": "LG 65\" OLED C4 TVs usually $2500‑$3000.",
+      "held": false,
+      "source": "https://www.engadget.com/early-black-friday-deal-takes-1300-off-the-lg-c4-oled-191840056.html"
+    },
+    {
+      "id": "S02",
+      "kind": "sale",
+      "product": "TCL 65-inch QM5K Series 4K QD-Mini LED Google TV",
+      "normal": 90000,
+      "price": 44999,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        80000,
+        120000
+      ],
+      "aiExplanation": "TCL 65\" QD‑Mini LED TVs cost $800‑$1200.",
+      "held": true,
+      "source": "https://9to5toys.com/?p=1188160"
+    },
+    {
+      "id": "S03",
+      "kind": "sale",
+      "product": "TCL 85-inch Q5K Series 4K QLED Google TV",
+      "normal": 120000,
+      "price": 59999,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        200000,
+        250000
+      ],
+      "aiExplanation": "TCL 85\" QLED TVs sell for $2000‑$2500.",
+      "held": true,
+      "source": "https://9to5toys.com/?p=1191492"
+    },
+    {
+      "id": "S04",
+      "kind": "sale",
+      "product": "Sony WH-1000XM5 noise-cancelling headphones",
+      "normal": 39999,
+      "price": 19800,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        35000,
+        40000
+      ],
+      "aiExplanation": "Sony WH‑1000XM5 headphones normally $350‑$400.",
+      "held": true,
+      "source": "https://www.digitaltrends.com/home-theater/prime-day-cuts-the-sony-wh-1000xm5-to-under-200-and-i-think-its-worth-every-penny/"
+    },
+    {
+      "id": "S05",
+      "kind": "sale",
+      "product": "Apple MacBook Air 13-inch M1, 8GB/256GB",
+      "normal": 99900,
+      "price": 64900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        99900,
+        105000
+      ],
+      "aiExplanation": "MacBook Air M1 13\" typically $999‑$1050.",
+      "held": false,
+      "source": "https://macrumors.com/2024/07/08/walmart-m1-macbook-air-for-649"
+    },
+    {
+      "id": "S06",
+      "kind": "sale",
+      "product": "Apple iPad 10th gen, 64GB Wi-Fi",
+      "normal": 34900,
+      "price": 24999,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        32900,
+        34900
+      ],
+      "aiExplanation": "iPad 10th gen 64GB usually $329‑$349.",
+      "held": false,
+      "source": "https://www.macrumors.com/2024/11/28/get-the-10th-gen-ipad-black-friday"
+    },
+    {
+      "id": "S07",
+      "kind": "sale",
+      "product": "Ring Battery Doorbell",
+      "normal": 10000,
+      "price": 5000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        10000,
+        12000
+      ],
+      "aiExplanation": "Ring Battery Doorbell normally $100‑$120.",
+      "held": true,
+      "source": "https://www.engadget.com/deals/this-battery-powered-ring-doorbell-is-on-sale-for-50-right-now-150926669.html"
+    },
+    {
+      "id": "S08",
+      "kind": "sale",
+      "product": "Google Pixel 9 Pro, 128GB",
+      "normal": 100000,
+      "price": 59900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        99900,
+        109900
+      ],
+      "aiExplanation": "Pixel 9 Pro 128GB typically $999‑$1099.",
+      "held": false,
+      "source": "https://www.notebookcheck.net/Who-needs-Pixel-10-Google-Pixel-9-Pro-crashes-to-its-lowest-price-yet-with-a-whopping-40-discount.1086213.0.html"
+    },
+    {
+      "id": "S09",
+      "kind": "sale",
+      "product": "Dyson V8 Absolute cordless vacuum",
+      "normal": 52000,
+      "price": 28000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        40000,
+        50000
+      ],
+      "aiExplanation": "Dyson V8 Absolute usually $400‑$500.",
+      "held": false,
+      "source": "https://www.engadget.com/dyson-black-friday-deals-include-up-to-250-off-its-cordless-vacuums-163102157.html"
+    },
+    {
+      "id": "S10",
+      "kind": "sale",
+      "product": "Dyson V15 Detect Absolute cordless vacuum",
+      "normal": 75000,
+      "price": 55000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        70000,
+        80000
+      ],
+      "aiExplanation": "Dyson V15 Detect Absolute sells for $700‑$800.",
+      "held": false,
+      "source": "https://www.engadget.com/dyson-black-friday-deals-include-up-to-250-off-its-cordless-vacuums-163102157.html"
+    },
+    {
+      "id": "S11",
+      "kind": "sale",
+      "product": "Apple MacBook Air 13-inch M4, 16GB/256GB",
+      "normal": 99900,
+      "price": 74900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        119900,
+        129900
+      ],
+      "aiExplanation": "MacBook Air M4 13\" 16GB/256GB typically $1199‑$1299.",
+      "held": false,
+      "source": "https://9to5toys.com/2025/11/20/official-black-friday-m4-macbook-air-deals/"
+    },
+    {
+      "id": "S12",
+      "kind": "sale",
+      "product": "Le Creuset 6.5-Quart Deep Round Oven",
+      "normal": 46000,
+      "price": 28995,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        35000,
+        40000
+      ],
+      "aiExplanation": "Le Creuset 6.5‑qt oven usually $350‑$400.",
+      "held": false,
+      "source": "https://www.nbcnews.com/select/shopping/le-creuset-dutch-oven-deal-of-the-day-2026-rcna261951"
+    },
+    {
+      "id": "S13",
+      "kind": "sale",
+      "product": "Apple AirPods Max",
+      "normal": 54900,
+      "price": 39900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        54900,
+        59900
+      ],
+      "aiExplanation": "Apple AirPods Max normally $549‑$599.",
+      "held": false,
+      "source": "https://www.engadget.com/deals/apples-airpods-max-are-back-on-sale-for-399-131059119.html"
+    },
+    {
+      "id": "S14",
+      "kind": "sale",
+      "product": "Lenovo Legion 5 15.1-inch OLED gaming laptop (RTX 5060, Ryzen 7 260)",
+      "normal": 154999,
+      "price": 99999,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        150000,
+        180000
+      ],
+      "aiExplanation": "Lenovo Legion 5 OLED laptop typically $1500‑$1800.",
+      "held": false,
+      "source": "https://abc7.com/post/best-black-friday-tech-deals-laptops-headphones-tablets/18213161/"
+    },
+    {
+      "id": "S15",
+      "kind": "sale",
+      "product": "TCL 85-inch Class S4 4K UHD HDR Roku TV",
+      "normal": 99900,
+      "price": 49800,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        150000,
+        200000
+      ],
+      "aiExplanation": "TCL 85\" S4 TV costs $1500‑$2000 new.",
+      "held": true,
+      "source": "https://abc7.com/post/best-black-friday-tech-deals-laptops-headphones-tablets/18213161/"
+    },
+    {
+      "id": "S16",
+      "kind": "sale",
+      "product": "Acer Chromebook 315 15.6-inch (Intel N4500, 4GB, 64GB eMMC)",
+      "normal": 21800,
+      "price": 10900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        20000,
+        25000
+      ],
+      "aiExplanation": "Acer Chromebook 315 usually $200‑$250.",
+      "held": true,
+      "source": "https://abc7.com/post/best-black-friday-tech-deals-laptops-headphones-tablets/18213161/"
+    },
+    {
+      "id": "S17",
+      "kind": "sale",
+      "product": "Apple Watch Series 10, 42mm GPS",
+      "normal": 39900,
+      "price": 27999,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        39900,
+        44900
+      ],
+      "aiExplanation": "Apple Watch Series 10 42mm GPS typically $399‑$449.",
+      "held": false,
+      "source": "https://www.macrumors.com/2025/07/08/apple-watch-series-10-prime-day/"
+    },
+    {
+      "id": "S18",
+      "kind": "sale",
+      "product": "Sony PlayStation 5 Slim (1TB, disc)",
+      "normal": 54999,
+      "price": 42499,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        54900,
+        59900
+      ],
+      "aiExplanation": "PS5 Slim 1TB disc version sells for $549‑$599.",
+      "held": false,
+      "source": "https://www.notebookcheck.net/Sony-slashes-PS5-prices-in-new-limited-time-deal.1144677.0.html"
+    },
+    {
+      "id": "S19",
+      "kind": "sale",
+      "product": "iRobot Roomba 104 Vac robot vacuum (Q311020)",
+      "normal": 25000,
+      "price": 13000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        25000,
+        30000
+      ],
+      "aiExplanation": "iRobot Roomba 104 normally $250‑$300.",
+      "held": true,
+      "source": "https://www.engadget.com/home/smart-home/black-friday-deals-include-this-roomba-robot-vacuum-for-only-130-191506142.html"
+    },
+    {
+      "id": "S20",
+      "kind": "sale",
+      "product": "Amazon Fire TV Stick 4K Max",
+      "normal": 6000,
+      "price": 3500,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        5000,
+        5500
+      ],
+      "aiExplanation": "Amazon Fire TV Stick 4K Max typically $50‑$55.",
+      "held": false,
+      "source": "https://www.engadget.com/deals/amazons-fire-tv-stick-4k-max-drops-to-35-for-black-friday-132100886.html"
+    },
+    {
+      "id": "S21",
+      "kind": "sale",
+      "product": "Bose QuietComfort Ultra Headphones ($449 MSRP model)",
+      "normal": 44900,
+      "price": 24900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        30000,
+        44900
+      ],
+      "aiExplanation": "Bose QC Ultra usually $350‑$449; $249 is far below typical sale price.",
+      "held": false,
+      "source": "https://www.soundguys.com/bose-quietcomfort-ultra-headphones-deal-amazon-162205/"
+    },
+    {
+      "id": "S22",
+      "kind": "sale",
+      "product": "Samsung 22.4 cu. ft. Food Showcase 4-door counter-depth refrigerator (RF22KREDBSR)",
+      "normal": 355400,
+      "price": 249800,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        250000,
+        355000
+      ],
+      "aiExplanation": "Samsung RF22KREDBSR fridge typically $2,500‑$3,550.",
+      "held": false,
+      "source": "https://digitaltrends.com/?p=2302262"
+    },
+    {
+      "id": "S23",
+      "kind": "sale",
+      "product": "iRobot Roomba 694 robot vacuum",
+      "normal": 27500,
+      "price": 15900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        25000,
+        30000
+      ],
+      "aiExplanation": "iRobot Roomba 694 usually $250‑$300; $159 is unusually low.",
+      "held": false,
+      "source": "https://www.engadget.com/irobots-roomba-694-drops-to-a-record-low-price-of-159-154512793.html"
+    },
+    {
+      "id": "S24",
+      "kind": "sale",
+      "product": "LEGO Minecraft Advent Calendar 2025 (21280)",
+      "normal": 4500,
+      "price": 2700,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        4500,
+        4900
+      ],
+      "aiExplanation": "LEGO Minecraft Advent Calendar 2025 normally $45‑$49; $27 is far below.",
+      "held": false,
+      "source": "https://9to5toys.com/?p=1168307"
+    },
+    {
+      "id": "S25",
+      "kind": "sale",
+      "product": "Marmot Guides Down Hooded Jacket (men's)",
+      "normal": 27500,
+      "price": 9600,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        25000,
+        30000
+      ],
+      "aiExplanation": "Marmot Guides Down Hooded Jacket typically $250‑$300; $96 seems missing a digit.",
+      "held": true,
+      "source": "https://9to5toys.com/2024/10/10/backcountry-fall-gear/"
+    },
+    {
+      "id": "S26",
+      "kind": "sale",
+      "product": "The North Face Front Range Jacket (men's)",
+      "normal": 13000,
+      "price": 5200,
+      "ruleCodes": [
+        "STEEP_DROP"
+      ],
+      "needsAi": false,
+      "rulesFire": true,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        10000,
+        13000
+      ],
+      "aiExplanation": "The North Face Front Range Jacket usually $100‑$130; $52 is unusually low.",
+      "held": true,
+      "source": "https://9to5toys.com/2024/10/10/backcountry-fall-gear/"
+    },
+    {
+      "id": "S27",
+      "kind": "sale",
+      "product": "The North Face Apex Bionic Jacket (women's)",
+      "normal": 15000,
+      "price": 7500,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        12000,
+        15000
+      ],
+      "aiExplanation": "The North Face Apex Bionic Jacket normally $120‑$150; $75 is far below typical price.",
+      "held": false,
+      "source": "https://9to5toys.com/2023/08/17/the-north-face-end-of-season-sale-2/"
+    }
+  ],
+  "new": [
+    {
+      "id": "M01",
+      "kind": "mistake",
+      "product": "Canon EF 800mm f/5.6L IS USM lens",
+      "normal": 1300000,
+      "price": 9450,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        1100000,
+        1300000
+      ],
+      "aiExplanation": "Canon 800mm lens typically $11k‑$13k new.",
+      "held": true,
+      "source": "https://engadget.com/2019/07/18/amazon-prime-day-pricing-error-camera-gear"
+    },
+    {
+      "id": "M02",
+      "kind": "mistake",
+      "product": "Cartier 18k rose-gold and diamond earrings",
+      "normal": 1400000,
+      "price": 1400,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        200000,
+        300000
+      ],
+      "aiExplanation": "Cartier rose‑gold diamond earrings usually $2k‑$3k.",
+      "held": true,
+      "source": "https://www.nbcnews.com/news/latino/man-buys-14000-cartier-earrings-14-company-posts-price-error-website-rcna150046"
+    },
+    {
+      "id": "M03",
+      "kind": "mistake",
+      "product": "Sony A6000 camera with 16-50mm lens bundle",
+      "normal": 55000,
+      "price": 9450,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        55000,
+        65000
+      ],
+      "aiExplanation": "Sony A6000 bundle normally $550‑$650.",
+      "held": true,
+      "source": "https://engadget.com/2019/07/18/amazon-prime-day-pricing-error-camera-gear"
+    },
+    {
+      "id": "M04",
+      "kind": "mistake",
+      "product": "Cathay Pacific round-trip premium-cabin fare, Da Nang (Vietnam) to New York",
+      "normal": 1600000,
+      "price": 67500,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        400000,
+        600000
+      ],
+      "aiExplanation": "Premium cabin round‑trip often $4k‑$6k.",
+      "held": true,
+      "source": "https://fortune.com/2019/01/02/cathay-pacific-pricing-gaffe"
+    },
+    {
+      "id": "M05",
+      "kind": "mistake",
+      "product": "ANA first-class round trip, Jakarta to Aruba via Tokyo and New York",
+      "normal": 1630000,
+      "price": 89000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        900000,
+        1200000
+      ],
+      "aiExplanation": "ANA first‑class round‑trip usually $9k‑$12k.",
+      "held": true,
+      "source": "https://www.yahoo.com/news/japans-largest-airline-canceling-10-153915133.html"
+    },
+    {
+      "id": "M06",
+      "kind": "mistake",
+      "product": "Qantas first-class round trip, Sydney to Los Angeles",
+      "normal": 1340000,
+      "price": 335000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        1300000,
+        1700000
+      ],
+      "aiExplanation": "Qantas first‑class Sydney‑LA about $13k‑$17k.",
+      "held": true,
+      "source": "https://onemileatatime.com/?p=326162"
+    },
+    {
+      "id": "M07",
+      "kind": "mistake",
+      "product": "Canon EOS R8 camera with RF 24-105mm lens bundle",
+      "normal": 161300,
+      "price": 4350,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        120000,
+        150000
+      ],
+      "aiExplanation": "Canon EOS R8 bundle typically $1.2k‑$1.5k.",
+      "held": true,
+      "source": "https://www.srf.ch/sendungen/kassensturz-espresso/espresso/vermeintliches-schnaeppchen-digitec-verkauft-kamera-fuer-35-statt-1299-franken"
+    },
+    {
+      "id": "M08",
+      "kind": "mistake",
+      "product": "Apple iPad Air 13-inch",
+      "normal": 101500,
+      "price": 1730,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        50000,
+        70000
+      ],
+      "aiExplanation": "iPad Air (10.9\") new price $500‑$700.",
+      "held": true,
+      "source": "https://www.ilpost.it/2025/11/27/mediaworld/"
+    },
+    {
+      "id": "M09",
+      "kind": "mistake",
+      "product": "Shell premium gasoline (per gallon)",
+      "normal": 699,
+      "price": 69,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        300,
+        400
+      ],
+      "aiExplanation": "US gasoline per gallon usually $3‑$4.",
+      "held": true,
+      "source": "https://cbs58.com/news/gas-mistakenly-priced-at-69-cents-a-gallon-at-california-shell-station"
+    },
+    {
+      "id": "M10",
+      "kind": "mistake",
+      "product": "Dell 19-inch LCD monitor (S14E1909WTW)",
+      "normal": 22884,
+      "price": 1526,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        9000,
+        12000
+      ],
+      "aiExplanation": "Dell 19\" LCD monitor normally $90‑$120.",
+      "held": true,
+      "source": "https://www.networkworld.com/article/784032/computers-dell-ordered-to-sell-19-inch-lcd-displays-for-15-in-taiwan.html"
+    },
+    {
+      "id": "M11",
+      "kind": "mistake",
+      "product": "United Airlines first-class round trip, London to Newark",
+      "normal": 561800,
+      "price": 7400,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        800000,
+        1000000
+      ],
+      "aiExplanation": "United first‑class London‑Newark about $8k‑$10k.",
+      "held": true,
+      "source": "https://www.foxnews.com/travel/united-offered-first-class-tickets-from-newark-to-london-for-74"
+    },
+    {
+      "id": "M12",
+      "kind": "mistake",
+      "product": "Microsoft Xbox One console",
+      "normal": 50900,
+      "price": 12060,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        25000,
+        30000
+      ],
+      "aiExplanation": "Xbox One console usually $250‑$300.",
+      "held": true,
+      "source": "https://www.theregister.com/2017/09/14/argos_says_technical_issue_hit_digital_laminated_catalogue/"
+    },
+    {
+      "id": "M13",
+      "kind": "mistake",
+      "product": "Panasonic 50-inch 3D plasma TV",
+      "normal": 170300,
+      "price": 30800,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        130000,
+        170000
+      ],
+      "aiExplanation": "50\" 3D plasma TV typically $1.3k‑$1.7k.",
+      "held": true,
+      "source": "https://www.sportsvideo.org/2012/01/20/petition-forces-ms-to-honor-orders-after-pricing-error-puts-1099-3dtvs-on-sale-for-199/"
+    },
+    {
+      "id": "M14",
+      "kind": "mistake",
+      "product": "DeWalt mechanics tool set",
+      "normal": 70000,
+      "price": 9900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        25000,
+        35000
+      ],
+      "aiExplanation": "DeWalt mechanic tool set usually $250‑$350.",
+      "held": true,
+      "source": "https://daily.slickdeals.net/shopping/the-latest-huge-price-mistake-proves-our-online-shopping-theory-video"
+    },
+    {
+      "id": "M15",
+      "kind": "mistake",
+      "product": "HD flat-screen TV (model not named)",
+      "normal": 60000,
+      "price": 885,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        25000,
+        35000
+      ],
+      "aiExplanation": "HD flat‑screen TV normally $250‑$350.",
+      "held": true,
+      "source": "http://www.christianpost.com/news/walmart-glitch-makes-video-games-18-hdtvs-8-85-thousands-of-online-orders-canceled.html"
+    },
+    {
+      "id": "M16",
+      "kind": "mistake",
+      "product": "Apple MacBook (model not named)",
+      "normal": 87000,
+      "price": 302,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        100000,
+        150000
+      ],
+      "aiExplanation": "Apple MacBook models typically $1k‑$1.5k.",
+      "held": true,
+      "source": "https://www.ewn.co.za/2024/05/26/sans-purchase-high-end-products-at-fraction-of-original-price-after-makro-app-glitch"
+    },
+    {
+      "id": "M17",
+      "kind": "mistake",
+      "product": "Turkish Airlines business-class one-way, Vancouver to Milan via Montreal and Istanbul",
+      "normal": 275000,
+      "price": 55000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        180000,
+        220000
+      ],
+      "aiExplanation": "Turkish business‑class one‑way about $1.8k‑$2.2k.",
+      "held": true,
+      "source": "https://www.tovima.com/wsj/i-snagged-a-550-business-class-ticket-to-italy-then-the-airline-found-out/"
+    },
+    {
+      "id": "M18",
+      "kind": "mistake",
+      "product": "Segway Ninebot Max electric scooter",
+      "normal": 52000,
+      "price": 6000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        75000,
+        90000
+      ],
+      "aiExplanation": "Segway Ninebot Max scooter usually $750‑$900.",
+      "held": true,
+      "source": "https://daily.slickdeals.net/shopping/most-exciting-price-mistakes-all-time/"
+    },
+    {
+      "id": "M19",
+      "kind": "mistake",
+      "product": "Samsung QLED 8K TV bundle",
+      "normal": 500000,
+      "price": 15000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        400000,
+        500000
+      ],
+      "aiExplanation": "Samsung QLED 8K TV bundle typically $4k‑$5k.",
+      "held": true,
+      "source": "https://daily.slickdeals.net/shopping/most-exciting-price-mistakes-all-time/"
+    },
+    {
+      "id": "M20",
+      "kind": "mistake",
+      "product": "Sony FE 16-35mm f/2.8 GM lens (preorder)",
+      "normal": 219800,
+      "price": 169800,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        180000,
+        210000
+      ],
+      "aiExplanation": "Sony FE 16‑35mm f/2.8 GM lens usually $1.8k‑$2.1k.",
+      "held": false,
+      "source": "https://daily.slickdeals.net/shopping/amazon-price-mistake-best-current-reports/"
+    },
+    {
+      "id": "M21",
+      "kind": "mistake",
+      "product": "Panasonic camera (model not named)",
+      "normal": 39999,
+      "price": 3750,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        30000,
+        40000
+      ],
+      "aiExplanation": "Panasonic camera models typically $300‑$400.",
+      "held": true,
+      "source": "https://daily.slickdeals.net/shopping/recent-price-mistakes-you-missed/"
+    },
+    {
+      "id": "M22",
+      "kind": "mistake",
+      "product": "Ultimate Ears Boom 3 Bluetooth speaker",
+      "normal": 12970,
+      "price": 4250,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        12000,
+        15000
+      ],
+      "aiExplanation": "Ultimate Ears Boom 3 speaker usually $120‑$150.",
+      "held": true,
+      "source": "https://www.lalibre.be/economie/entreprises-startup/2023/12/01/une-enceinte-a-39-au-lieu-de-119-la-fnac-plaide-lerreur-et-annule-les-commandes-testachats-contre-attaque-GWXG47MDYFA2NG5KAZOZ3W74GY/"
+    },
+    {
+      "id": "M23",
+      "kind": "mistake",
+      "product": "Professional digital camera (two models, not named)",
+      "normal": 296300,
+      "price": 52900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        150000,
+        250000
+      ],
+      "aiExplanation": "Professional digital cameras generally $1.5k‑$2.5k.",
+      "held": true,
+      "source": "https://www.publimetro.com.mx/noticias/2023/02/08/tienda-online-vende-camaras-profesionales-de-56-mil-en-10-mil-pesos-por-error"
+    },
+    {
+      "id": "M24",
+      "kind": "mistake",
+      "product": "HP 200 G4 All-in-One desktop computer",
+      "normal": 66500,
+      "price": 5510,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        25000,
+        30000
+      ],
+      "aiExplanation": "HP 200 G4 All‑in‑One desktop about $250‑$300.",
+      "held": true,
+      "source": "https://www.elsiglodetorreon.com.mx/noticia/2022/estos-fueron-los-cinco-errores-de-etiquetado-mas-graves-durante-el-buen-fin.html"
+    },
+    {
+      "id": "M25",
+      "kind": "mistake",
+      "product": "Armani jacket (model not named)",
+      "normal": 82400,
+      "price": 82,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        40000,
+        60000
+      ],
+      "aiExplanation": "Armani jacket typically $400‑$600.",
+      "held": true,
+      "source": "https://www.elsiglodetorreon.com.mx/noticia/2022/estos-fueron-los-cinco-errores-de-etiquetado-mas-graves-durante-el-buen-fin.html"
+    },
+    {
+      "id": "M26",
+      "kind": "mistake",
+      "product": "Samsung gas washer/dryer center",
+      "normal": 343800,
+      "price": 57700,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        200000,
+        250000
+      ],
+      "aiExplanation": "Typical new price $2000‑$2500, $577 is far too low.",
+      "held": true,
+      "source": "https://www.elsiglodetorreon.com.mx/noticia/2022/estos-fueron-los-cinco-errores-de-etiquetado-mas-graves-durante-el-buen-fin.html"
+    },
+    {
+      "id": "M27",
+      "kind": "mistake",
+      "product": "Apple iPhone 11, 64GB",
+      "normal": 51500,
+      "price": 33200,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        39900,
+        44900
+      ],
+      "aiExplanation": "iPhone 11 64GB usually $699, $332 is a deep discount but plausible.",
+      "held": false,
+      "source": "https://www.elsiglodetorreon.com.mx/noticia/2022/estos-fueron-los-cinco-errores-de-etiquetado-mas-graves-durante-el-buen-fin.html"
+    },
+    {
+      "id": "M28",
+      "kind": "mistake",
+      "product": "Motorcycle (three models, not named)",
+      "normal": 335800,
+      "price": 336,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        300000,
+        1500000
+      ],
+      "aiExplanation": "Motorcycles cost thousands, $3.36 is impossible.",
+      "held": true,
+      "source": "https://www.yucatan.com.mx/mexico/2022/12/09/tienda-departamental-oferta-motos-en-menos-de-70-pesos-piden-ayuda-de-profeco-367787.html"
+    },
+    {
+      "id": "M29",
+      "kind": "mistake",
+      "product": "Sony a7R mirrorless camera (name from the article's link)",
+      "normal": 189800,
+      "price": 19999,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        250000,
+        300000
+      ],
+      "aiExplanation": "Sony a7R cameras sell for $2500‑$3000, $199.99 is unrealistic.",
+      "held": true,
+      "source": "https://daily.slickdeals.net/shopping/amazon-price-mistake-best-current-reports/"
+    },
+    {
+      "id": "M30",
+      "kind": "mistake",
+      "product": "Corsair Dominator Titanium RGB 48GB (2x24GB) DDR5 memory kit",
+      "normal": 50000,
+      "price": 23999,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        22000,
+        30000
+      ],
+      "aiExplanation": "48GB DDR5 kits normally $250‑$300, $239.99 is within discount range.",
+      "held": false,
+      "source": "https://www.notebookcheck.net/Corsair-is-reportedly-canceling-DDR5-RAM-orders-due-to-pricing-mistake-offering-expired-coupon-codes-as-an-apology.1195239.0.html"
+    },
+    {
+      "id": "S01",
+      "kind": "sale",
+      "product": "LG 65-inch OLED evo C4 TV",
+      "normal": 270000,
+      "price": 139400,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        180000,
+        200000
+      ],
+      "aiExplanation": "LG 65\" OLED C4 usually $1800‑$2000, $1394 is a strong but plausible discount.",
+      "held": false,
+      "source": "https://www.engadget.com/early-black-friday-deal-takes-1300-off-the-lg-c4-oled-191840056.html"
+    },
+    {
+      "id": "S02",
+      "kind": "sale",
+      "product": "TCL 65-inch QM5K Series 4K QD-Mini LED Google TV",
+      "normal": 90000,
+      "price": 44999,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        110000,
+        130000
+      ],
+      "aiExplanation": "TCL 65\" QD‑Mini LED typically $1200+, $449.99 is far too low.",
+      "held": true,
+      "source": "https://9to5toys.com/?p=1188160"
+    },
+    {
+      "id": "S03",
+      "kind": "sale",
+      "product": "TCL 85-inch Q5K Series 4K QLED Google TV",
+      "normal": 120000,
+      "price": 59999,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        240000,
+        280000
+      ],
+      "aiExplanation": "85\" QLED TVs cost $2500‑$2800, $599.99 is implausible.",
+      "held": true,
+      "source": "https://9to5toys.com/?p=1191492"
+    },
+    {
+      "id": "S04",
+      "kind": "sale",
+      "product": "Sony WH-1000XM5 noise-cancelling headphones",
+      "normal": 39999,
+      "price": 19800,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        35000,
+        40000
+      ],
+      "aiExplanation": "WH‑1000XM5 usually $350‑$400, $198 is below 40% discount threshold.",
+      "held": false,
+      "source": "https://www.digitaltrends.com/home-theater/prime-day-cuts-the-sony-wh-1000xm5-to-under-200-and-i-think-its-worth-every-penny/"
+    },
+    {
+      "id": "S05",
+      "kind": "sale",
+      "product": "Apple MacBook Air 13-inch M1, 8GB/256GB",
+      "normal": 99900,
+      "price": 64900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        99900,
+        104900
+      ],
+      "aiExplanation": "MacBook Air M1 13\" 256GB normally $999, $649 is a 35% discount.",
+      "held": false,
+      "source": "https://macrumors.com/2024/07/08/walmart-m1-macbook-air-for-649"
+    },
+    {
+      "id": "S06",
+      "kind": "sale",
+      "product": "Apple iPad 10th gen, 64GB Wi-Fi",
+      "normal": 34900,
+      "price": 24999,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        44900,
+        49900
+      ],
+      "aiExplanation": "iPad 10th gen 64GB usually $449‑$499, $249.99 is >40% off.",
+      "held": false,
+      "source": "https://www.macrumors.com/2024/11/28/get-the-10th-gen-ipad-black-friday"
+    },
+    {
+      "id": "S07",
+      "kind": "sale",
+      "product": "Ring Battery Doorbell",
+      "normal": 10000,
+      "price": 5000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        9900,
+        11900
+      ],
+      "aiExplanation": "Ring Battery Doorbell normally $99‑$119, $50 is about 50% off.",
+      "held": true,
+      "source": "https://www.engadget.com/deals/this-battery-powered-ring-doorbell-is-on-sale-for-50-right-now-150926669.html"
+    },
+    {
+      "id": "S08",
+      "kind": "sale",
+      "product": "Google Pixel 9 Pro, 128GB",
+      "normal": 100000,
+      "price": 59900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        79900,
+        89900
+      ],
+      "aiExplanation": "Pixel 9 Pro 128GB usually $899, $599 is a 33% discount.",
+      "held": false,
+      "source": "https://www.notebookcheck.net/Who-needs-Pixel-10-Google-Pixel-9-Pro-crashes-to-its-lowest-price-yet-with-a-whopping-40-discount.1086213.0.html"
+    },
+    {
+      "id": "S09",
+      "kind": "sale",
+      "product": "Dyson V8 Absolute cordless vacuum",
+      "normal": 52000,
+      "price": 28000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        50000,
+        55000
+      ],
+      "aiExplanation": "Dyson V8 Absolute normally $500‑$550, $280 is >40% off.",
+      "held": false,
+      "source": "https://www.engadget.com/dyson-black-friday-deals-include-up-to-250-off-its-cordless-vacuums-163102157.html"
+    },
+    {
+      "id": "S10",
+      "kind": "sale",
+      "product": "Dyson V15 Detect Absolute cordless vacuum",
+      "normal": 75000,
+      "price": 55000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        75000,
+        85000
+      ],
+      "aiExplanation": "Dyson V15 Detect usually $750‑$850, $550 is a 31% discount.",
+      "held": false,
+      "source": "https://www.engadget.com/dyson-black-friday-deals-include-up-to-250-off-its-cordless-vacuums-163102157.html"
+    },
+    {
+      "id": "S11",
+      "kind": "sale",
+      "product": "Apple MacBook Air 13-inch M4, 16GB/256GB",
+      "normal": 99900,
+      "price": 74900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        119900,
+        129900
+      ],
+      "aiExplanation": "MacBook Air M4 13\" 256GB normally $1199‑$1299, $749 is 38% off.",
+      "held": false,
+      "source": "https://9to5toys.com/2025/11/20/official-black-friday-m4-macbook-air-deals/"
+    },
+    {
+      "id": "S12",
+      "kind": "sale",
+      "product": "Le Creuset 6.5-Quart Deep Round Oven",
+      "normal": 46000,
+      "price": 28995,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        34000,
+        38000
+      ],
+      "aiExplanation": "Le Creuset 6.5‑qt Dutch oven typically $340‑$380, $289.95 is a modest discount.",
+      "held": false,
+      "source": "https://www.nbcnews.com/select/shopping/le-creuset-dutch-oven-deal-of-the-day-2026-rcna261951"
+    },
+    {
+      "id": "S13",
+      "kind": "sale",
+      "product": "Apple AirPods Max",
+      "normal": 54900,
+      "price": 39900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        54900,
+        59900
+      ],
+      "aiExplanation": "AirPods Max usually $549‑$599, $399 is a 27% discount.",
+      "held": false,
+      "source": "https://www.engadget.com/deals/apples-airpods-max-are-back-on-sale-for-399-131059119.html"
+    },
+    {
+      "id": "S14",
+      "kind": "sale",
+      "product": "Lenovo Legion 5 15.1-inch OLED gaming laptop (RTX 5060, Ryzen 7 260)",
+      "normal": 154999,
+      "price": 99999,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        120000,
+        140000
+      ],
+      "aiExplanation": "Lenovo Legion 5 OLED RTX 5060 typically $1300‑$1400, $999.99 is a 23% discount.",
+      "held": false,
+      "source": "https://abc7.com/post/best-black-friday-tech-deals-laptops-headphones-tablets/18213161/"
+    },
+    {
+      "id": "S15",
+      "kind": "sale",
+      "product": "TCL 85-inch Class S4 4K UHD HDR Roku TV",
+      "normal": 99900,
+      "price": 49800,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        250000,
+        300000
+      ],
+      "aiExplanation": "85\" TCL S4 TV costs $2500‑$3000, $498 is far too low.",
+      "held": true,
+      "source": "https://abc7.com/post/best-black-friday-tech-deals-laptops-headphones-tablets/18213161/"
+    },
+    {
+      "id": "S16",
+      "kind": "sale",
+      "product": "Acer Chromebook 315 15.6-inch (Intel N4500, 4GB, 64GB eMMC)",
+      "normal": 21800,
+      "price": 10900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        25000,
+        30000
+      ],
+      "aiExplanation": "Acer Chromebook 315 normally $250‑$300, $109 is >40% off.",
+      "held": true,
+      "source": "https://abc7.com/post/best-black-friday-tech-deals-laptops-headphones-tablets/18213161/"
+    },
+    {
+      "id": "S17",
+      "kind": "sale",
+      "product": "Apple Watch Series 10, 42mm GPS",
+      "normal": 39900,
+      "price": 27999,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        42900,
+        44900
+      ],
+      "aiExplanation": "Apple Watch Series 10 42mm usually $429‑$449, $279.99 is a 35% discount.",
+      "held": false,
+      "source": "https://www.macrumors.com/2025/07/08/apple-watch-series-10-prime-day/"
+    },
+    {
+      "id": "S18",
+      "kind": "sale",
+      "product": "Sony PlayStation 5 Slim (1TB, disc)",
+      "normal": 54999,
+      "price": 42499,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        59900,
+        64900
+      ],
+      "aiExplanation": "PS5 Slim 1TB normally $599‑$649, $424.99 is a 29% discount.",
+      "held": false,
+      "source": "https://www.notebookcheck.net/Sony-slashes-PS5-prices-in-new-limited-time-deal.1144677.0.html"
+    },
+    {
+      "id": "S19",
+      "kind": "sale",
+      "product": "iRobot Roomba 104 Vac robot vacuum (Q311020)",
+      "normal": 25000,
+      "price": 13000,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        30000,
+        35000
+      ],
+      "aiExplanation": "Roomba 104 usually $300‑$350, $130 is >40% off.",
+      "held": true,
+      "source": "https://www.engadget.com/home/smart-home/black-friday-deals-include-this-roomba-robot-vacuum-for-only-130-191506142.html"
+    },
+    {
+      "id": "S20",
+      "kind": "sale",
+      "product": "Amazon Fire TV Stick 4K Max",
+      "normal": 6000,
+      "price": 3500,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        5500,
+        6500
+      ],
+      "aiExplanation": "Fire TV Stick 4K Max normally $55‑$65, $35 is a 36% discount.",
+      "held": false,
+      "source": "https://www.engadget.com/deals/amazons-fire-tv-stick-4k-max-drops-to-35-for-black-friday-132100886.html"
+    },
+    {
+      "id": "S21",
+      "kind": "sale",
+      "product": "Bose QuietComfort Ultra Headphones ($449 MSRP model)",
+      "normal": 44900,
+      "price": 24900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        35000,
+        44900
+      ],
+      "aiExplanation": "Bose QC Ultra typically sells $350‑$449 new.",
+      "held": false,
+      "source": "https://www.soundguys.com/bose-quietcomfort-ultra-headphones-deal-amazon-162205/"
+    },
+    {
+      "id": "S22",
+      "kind": "sale",
+      "product": "Samsung 22.4 cu. ft. Food Showcase 4-door counter-depth refrigerator (RF22KREDBSR)",
+      "normal": 355400,
+      "price": 249800,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "ok",
+      "aiRange": [
+        250000,
+        350000
+      ],
+      "aiExplanation": "22.4 cu ft. Samsung fridge usually $2.5k‑$3.5k new.",
+      "held": false,
+      "source": "https://digitaltrends.com/?p=2302262"
+    },
+    {
+      "id": "S23",
+      "kind": "sale",
+      "product": "iRobot Roomba 694 robot vacuum",
+      "normal": 27500,
+      "price": 15900,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        20000,
+        30000
+      ],
+      "aiExplanation": "iRobot Roomba 694 normally $200‑$300 new.",
+      "held": false,
+      "source": "https://www.engadget.com/irobots-roomba-694-drops-to-a-record-low-price-of-159-154512793.html"
+    },
+    {
+      "id": "S24",
+      "kind": "sale",
+      "product": "LEGO Minecraft Advent Calendar 2025 (21280)",
+      "normal": 4500,
+      "price": 2700,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        4000,
+        5000
+      ],
+      "aiExplanation": "LEGO Minecraft Advent Calendar usually $40‑$50 new.",
+      "held": false,
+      "source": "https://9to5toys.com/?p=1168307"
+    },
+    {
+      "id": "S25",
+      "kind": "sale",
+      "product": "Marmot Guides Down Hooded Jacket (men's)",
+      "normal": 27500,
+      "price": 9600,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        15000,
+        20000
+      ],
+      "aiExplanation": "Marmot Guides Down Hooded Jacket typically $150‑$200 new.",
+      "held": false,
+      "source": "https://9to5toys.com/2024/10/10/backcountry-fall-gear/"
+    },
+    {
+      "id": "S26",
+      "kind": "sale",
+      "product": "The North Face Front Range Jacket (men's)",
+      "normal": 13000,
+      "price": 5200,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "suspicious",
+      "aiRange": [
+        9000,
+        12000
+      ],
+      "aiExplanation": "The North Face Front Range Jacket usually $90‑$120 new.",
+      "held": false,
+      "source": "https://9to5toys.com/2024/10/10/backcountry-fall-gear/"
+    },
+    {
+      "id": "S27",
+      "kind": "sale",
+      "product": "The North Face Apex Bionic Jacket (women's)",
+      "normal": 15000,
+      "price": 7500,
+      "ruleCodes": [],
+      "needsAi": true,
+      "rulesFire": false,
+      "rulesFailClosed": true,
+      "aiVerdict": "implausible",
+      "aiRange": [
+        18000,
+        25000
+      ],
+      "aiExplanation": "The North Face Apex Bionic Jacket normally $180‑$250 new.",
+      "held": true,
+      "source": "https://9to5toys.com/2023/08/17/the-north-face-end-of-season-sale-2/"
+    }
+  ]
+}
