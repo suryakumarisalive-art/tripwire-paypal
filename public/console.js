@@ -1,5 +1,5 @@
 import { $, h, usd, api, storeId, toast, initTheme } from './common.js';
-import { shortLabel, tourProgress, swarmReadings, terminalState, waitingActions } from './logic.js';
+import { shortLabel, tourProgress, swarmReadings, terminalState, waitingActions, swarmSummary } from './logic.js';
 
 const POLL_MS = 2000;
 const IDLE_MS = 10 * 60_000;
@@ -650,11 +650,8 @@ async function runSwarm(sku = $('#swarmSku').value, button = $('#swarmBtn')) {
   // the PayPal screen answers the only question that matters: how many of the bots got through
   renderTerminal();
   if (!r.authorized) { const t = $('#terminal'); t.classList.remove('zero'); void t.offsetWidth; t.classList.add('zero'); }
-  $('#swarmResult').replaceChildren(
-    h('strong', {}, `${r.refused} of ${r.count} refused before PayPal`),
-    h('div', {}, r.authorized ? `${r.authorized} authorized and waiting; nothing captured.` : 'Not one PayPal order was created.'),
-    r.failed ? h('div', {}, `${r.failed} failed at PayPal.`) : null,
-    h('div', { class: 'faint' }, nameOf(sku)));
+  const [head, ...lines] = swarmSummary(r); // replaceChildren would print a null as the text "null"
+  $('#swarmResult').replaceChildren(h('strong', {}, head), ...lines.map((t) => h('div', {}, t)), h('div', { class: 'faint' }, nameOf(sku)));
 }
 
 async function main() {

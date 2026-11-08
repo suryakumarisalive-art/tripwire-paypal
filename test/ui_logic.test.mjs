@@ -56,3 +56,12 @@ test('a review item offers no Capture button: the server refuses honor on review
   assert.deepEqual(waitingActions('tripped'), ['void', 'honor']);
   assert.deepEqual(waitingActions('held'), ['void', 'honor']);
 });
+
+test('the bots result prints only real lines: no "null" when nothing failed at PayPal', async () => {
+  const { swarmSummary } = await import('../public/logic.js');
+  assert.deepEqual(swarmSummary({ refused: 20, count: 25, authorized: 5, failed: 0 }),
+    ['20 of 25 refused before PayPal', '5 authorized and waiting; nothing captured.']);
+  assert.deepEqual(swarmSummary({ refused: 25, count: 25, authorized: 0, failed: 0 }), ['25 of 25 refused before PayPal', 'Not one PayPal order was created.']);
+  assert.equal(swarmSummary({ refused: 23, count: 25, authorized: 1, failed: 1 })[2], '1 failed at PayPal.');
+  assert.ok(!swarmSummary({ refused: 20, count: 25, authorized: 5, failed: 0 }).some((l) => l == null));
+});

@@ -50,3 +50,10 @@ export function terminalState(events) {
 // The buttons for a product's waiting orders. Under review, PayPal capture happens only by confirming the price
 // (the server refuses "honor" there with a 409), so a review item gets Void but no Capture.
 export function waitingActions(status) { return status === 'review' ? ['void'] : ['void', 'honor']; }
+
+// The lines under "Point the bots anywhere". Only lines that apply are returned, so a missing one never prints as "null".
+export function swarmSummary(r) {
+  return [`${r.refused} of ${r.count} refused before PayPal`,
+    r.authorized ? `${r.authorized} authorized and waiting; nothing captured.` : 'Not one PayPal order was created.',
+    ...(r.failed ? [`${r.failed} failed at PayPal.`] : [])];
+}

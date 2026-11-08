@@ -71,7 +71,7 @@ Real ChatGPT / Agent Ready checkout is PayPal early access and is not part of th
 
 ## Evidence it works
 
-- **214 automated tests** (`npm test`) cover the rules, the AI parsing, every store transition, settlement, recovery, reconciliation, webhooks, multi-unit orders, the API, MCP, the AI budget and the schema migration. Each bug fix has a regression test.
+- **215 automated tests** (`npm test`) cover the rules, the AI parsing, every store transition, settlement, recovery, reconciliation, webhooks, multi-unit orders, the API, MCP, the AI budget and the schema migration. Each bug fix has a regression test.
 - **Four live end-to-end scripts** run against the deployed Worker, the real PayPal sandbox and the real AI, and all pass:
   - `tools/e2e_live.mjs`: the demo flows, including review with real captures;
   - `tools/merchant_example.mjs`: a merchant's own server behind the gate, including multi-unit orders, a price slipped up, and one 500-unit order;
@@ -102,7 +102,7 @@ Real ChatGPT / Agent Ready checkout is PayPal early access and is not part of th
 ## Run it yourself
 
 ```
-npm test                                   # 214 tests, Node 22+, no dependencies
+npm test                                   # 215 tests, Node 22+, no dependencies
 npx wrangler dev                           # local; put PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET and GROQ_API_KEY in .dev.vars
 npx wrangler secret put PAYPAL_CLIENT_ID   # then PAYPAL_CLIENT_SECRET and GROQ_API_KEY
 npx wrangler deploy
